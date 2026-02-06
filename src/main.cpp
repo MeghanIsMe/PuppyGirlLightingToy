@@ -52,7 +52,7 @@ void RandomTest();
 
 void setup() 
 {
-	delay(8000);			// power on safety delay
+	delay(5000);			// power on safety delay
 	Serial.begin(9600);		// for serial debugging
 
 	// Associating arrays with FastLED. These arrays will be written out to hardware at the end of each main loop
@@ -90,10 +90,10 @@ void loop()
 
 	//systemLeds.virtualLedStrip[0].ChaseWithFade(60,prideTransgender, .6,2);
 		
-	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(300, prideLesbian, 1,0,1,0);
-	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(-300, prideTransgender, 0,1,0,1);
+	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(300, prideRainbow, 1,0,1,0);
+	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(-300, prideRainbow, 0,1,0,1);
 	
-		// I feel like it makes the most intuitive sense to make methods of the systemleds object copy arrays out to hardware-associated arrays instead of
+	// I feel like it makes the most intuitive sense to make methods of the systemleds object copy arrays out to hardware-associated arrays instead of
 	// using individual fan object methods. It feels more like the system leds device is managing system operations and is separated froom the indvidual
 	// hardware objects
 	// I think I want to rewrite it that way
