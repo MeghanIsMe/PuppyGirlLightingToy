@@ -40,7 +40,7 @@ full_SystemLeds systemLeds;
 system_Timer systemTimer;
 
 // Declaring test functions: each one will run the named effect on all relevant devices
-void TestFadeThroughColors(int, const CRGB*);
+void TestFadeThroughColorsFans(int, const CRGB*);
 void TestSpinColorWave(int, const CRGB*);
 void TestSpinColorWaveFade(int, const CRGB*);
 void TestSpinLeds(int, CRGB, CRGB = CRGB::Black, CRGB = CRGB::Black);
@@ -70,7 +70,7 @@ void loop()
 	deltaMillis = systemTimer.GetDeltaMillis();	// deltaMillis is defined in globals for doggos. It is global so that all classes have access to the value for use in timing
 
 	// test functions
-	// TestFadeThroughColors(600, prideTransgender);
+	// TestFadeThroughColorsFans(600, prideTransgender);
 	// TestSpinColorWave(100, prideTransgender);
 	// TestSpinColorWaveFade(100, prideTransgender);
 
@@ -114,7 +114,7 @@ void loop()
 	FastLED.show();     
 }
 
-void TestFadeThroughColors(int speed, const CRGB* palette)
+void TestFadeThroughColorsFans(int speed, const CRGB* palette)
 {
 	systemLeds.virtualAspectFan[0].FadeThroughColors(speed, palette);
 	systemLeds.virtualAspectFan[1].FadeThroughColors(speed * -1, palette);
@@ -181,7 +181,7 @@ void RandomTest()
 		if (i == 0)
 		{
 			if (rand == 0)
-				systemLeds.virtualAspectFan[0].FadeThroughColors(speed,paletteUsed);
+				systemLeds.virtualAspectFan[0].FadeThroughColorsFans(speed,paletteUsed);
 			else if (rand == 1)
 				systemLeds.virtualAspectFan[0].SpinColorWave(speed,paletteUsed);
 			else if (rand == 2)
@@ -196,7 +196,7 @@ void RandomTest()
 		else if (i == 1)
 		{
 			if (rand == 0)
-				systemLeds.virtualAspectFan[1].FadeThroughColors(speed,paletteUsed);
+				systemLeds.virtualAspectFan[1].FadeThroughColorsFans(speed,paletteUsed);
 			else if (rand == 1)
 				systemLeds.virtualAspectFan[1].SpinColorWave(speed,paletteUsed);
 			else if (rand == 2)
@@ -211,7 +211,7 @@ void RandomTest()
 		else if (i == 2)
 		{
 			if (rand == 0)
-				systemLeds.virtualAspectFan[2].FadeThroughColors(speed,paletteUsed);
+				systemLeds.virtualAspectFan[2].FadeThroughColorsFans(speed,paletteUsed);
 			else if (rand == 1)
 				systemLeds.virtualAspectFan[2].SpinColorWave(speed,paletteUsed);
 			else if (rand == 2)
@@ -226,7 +226,7 @@ void RandomTest()
 		else if (i == )
 		{
 			if (rand == 0)
-				systemLeds.virtualCPUFan[1].FadeThroughColors(speed,paletteUsed);
+				systemLeds.virtualCPUFan[1].FadeThroughColorsFans(speed,paletteUsed);
 			else if (rand == 1)
 				systemLeds.virtualCPUFan[1].SpinColorWave(speed,paletteUsed);
 			else if (rand == 2)

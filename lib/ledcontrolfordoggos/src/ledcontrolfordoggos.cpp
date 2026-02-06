@@ -199,18 +199,18 @@ void generic_LedDevice::AdvanceFrame(int speed, int FRAMELIMIT)
 if (*p_activeFrameCounter > FRAMELIMIT)		// if another effect left the frame number too high, reset to 0
 		*p_activeFrameCounter = 0;			// no fix needed for low end of range because all effects will start at frame 0
 											// and will never go below -1 in correctly written functions
-	if (speed >= 0)  		// with positive speed, frames increment from 0 to FRAMELIMIT             			
-	{    
-	  *p_activeFrameCounter += 1;			
-	  if (*p_activeFrameCounter == FRAMELIMIT)  // when frameNumber reaches FRAMELIMIT, it resets to 0 before next function iteration
-		*p_activeFrameCounter = 0;
-	}
-	else					// with negative speed, frames decrement from FRAMELIMIT -1 to -1
-	{
-	  *p_activeFrameCounter -= 1;			
-	  if (*p_activeFrameCounter == -1)
-		*p_activeFrameCounter = FRAMELIMIT -1;	// when frameNumber reaches -1, reset to FRAMELIMIT -1 before next function iteration		
-	}		
+if (speed >= 0)  		// with positive speed, frames increment from 0 to FRAMELIMIT             			
+{    
+	*p_activeFrameCounter += 1;			
+	if (*p_activeFrameCounter == FRAMELIMIT)  // when frameNumber reaches FRAMELIMIT, it resets to 0 before next function iteration
+	*p_activeFrameCounter = 0;
+}
+else					// with negative speed, frames decrement from FRAMELIMIT -1 to -1
+{
+	*p_activeFrameCounter -= 1;			
+	if (*p_activeFrameCounter == -1)
+	*p_activeFrameCounter = FRAMELIMIT -1;	// when frameNumber reaches -1, reset to FRAMELIMIT -1 before next function iteration		
+}		
 };
 
 // ░░░░░░░░░░░█▀▀░█▀▀░█▀▀░█▀▀░█▀▀░▀█▀░█▀▀░░░█▀▀░█░█░█▀█░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀░░░░░░░░
@@ -268,39 +268,7 @@ void generic_LedDevice::FadeLeds(int NUMLEDS, float amount)
 	}
 };
 
-// ░█░░░▀█▀░█▀▀░█░█░▀█▀░█░░░█▀▀░█▀▄░█▀▀
-// ░█░░░░█░░█░█░█▀█░░█░░█░░░█▀▀░█░█░▀▀█
-// ░▀▀▀░▀▀▀░▀▀▀░▀░▀░░▀░░▀▀▀░▀▀▀░▀▀░░▀▀▀
-/* Set all LEDS on calling device to the color passed to function
-This will almost never be called directly from main: instead, it will be called
-as a portion of another effects function. In that context, NUMLEDS can be passed
-directly from the calling object's attributes
-	Parameters:
-NUMLEDS - The number of LEDs to be lit
-color - The color to set the LEDs to */
-void generic_LedDevice::LightLeds(int NUMLEDS, CRGB color)
-{
-	for (int i = 0; i < NUMLEDS; i++)
-		p_objectLedArray[i] = color;
-};
-
-
-			// ░█▀▀░█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░▀█▀░█▀▀░░░█▀▀░█▀█░█▀█░░░█▀▀░█░░░█▀█░█▀▀░█▀▀
-			// ░█░░░█░░░▄▄▄░█░█░█▀▀░█░█░█▀▀░█▀▄░░█░░█░░░░░█▀▀░█▀█░█░█░░░█░░░█░░░█▀█░▀▀█░▀▀█
-			// ░▀▀▀░▀▀▀░░░░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░░░▀░░░▀░▀░▀░▀░░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀
-
-// ░░░░░░░░░░░█▀▀░█▀▀░█▀▀░█▀▀░█▀▀░▀█▀░█▀▀░░░█▀▀░█░█░█▀█░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀░░░░░░░░
-// ░▄▄▄░▄▄▄░░░█▀▀░█▀▀░█▀▀░█▀▀░█░░░░█░░▀▀█░░░█▀▀░█░█░█░█░█░░░░█░░░█░░█░█░█░█░▀▀█░▄▄▄░▄▄▄
-// ░░░░░░░░░░░▀▀▀░▀░░░▀░░░▀▀▀░▀▀▀░░▀░░▀▀▀░░░▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀░░░░░░░░
-
-// ░█▀▀░█▀█░█▀▄░█▀▀░░░▀█▀░█░█░█▀▄░█▀█░█░█░█▀▀░█░█░░░█▀▀░█▀█░█░░░█▀█░█▀▄░█▀▀
-// ░█▀▀░█▀█░█░█░█▀▀░░░░█░░█▀█░█▀▄░█░█░█░█░█░█░█▀█░░░█░░░█░█░█░░░█░█░█▀▄░▀▀█
-// ░▀░░░▀░▀░▀▀░░▀▀▀░░░░▀░░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀
-// fades all LEDs on fan from one color to the next through the passed CRGB palette array. 
-//		Parameters:
-// speed - time in milliseconds between frame
-// palette - color palette used for effect
-void generic_Fan::FadeThroughColors(int speed, const CRGB* palette)
+void generic_LedDevice::FadeThroughColors(int speed, const CRGB* palette)
 {
 	const int FRAMELIMIT = GetLengthOfBlackTerminatedCRGBArray(palette);  // each color in the palette array gets one frame
 	
@@ -325,6 +293,31 @@ void generic_Fan::FadeThroughColors(int speed, const CRGB* palette)
 	if (nextFrame)
     AdvanceFrame(speed, FRAMELIMIT);  //advance frame as appropriate		
 };
+
+// ░█░░░▀█▀░█▀▀░█░█░▀█▀░█░░░█▀▀░█▀▄░█▀▀
+// ░█░░░░█░░█░█░█▀█░░█░░█░░░█▀▀░█░█░▀▀█
+// ░▀▀▀░▀▀▀░▀▀▀░▀░▀░░▀░░▀▀▀░▀▀▀░▀▀░░▀▀▀
+/* Set all LEDS on calling device to the color passed to function
+This will almost never be called directly from main: instead, it will be called
+as a portion of another effects function. In that context, NUMLEDS can be passed
+directly from the calling object's attributes
+	Parameters:
+NUMLEDS - The number of LEDs to be lit
+color - The color to set the LEDs to */
+void generic_LedDevice::LightLeds(int NUMLEDS, CRGB color)
+{
+	for (int i = 0; i < NUMLEDS; i++)
+		p_objectLedArray[i] = color;
+};
+
+
+			// ░█▀▀░█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░▀█▀░█▀▀░░░█▀▀░█▀█░█▀█░░░█▀▀░█░░░█▀█░█▀▀░█▀▀
+			// ░█░░░█░░░▄▄▄░█░█░█▀▀░█░█░█▀▀░█▀▄░░█░░█░░░░░█▀▀░█▀█░█░█░░░█░░░█░░░█▀█░▀▀█░▀▀█
+			// ░▀▀▀░▀▀▀░░░░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░░░▀░░░▀░▀░▀░▀░░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀
+
+// ░░░░░░░░░░░█▀▀░█▀▀░█▀▀░█▀▀░█▀▀░▀█▀░█▀▀░░░█▀▀░█░█░█▀█░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀░░░░░░░░
+// ░▄▄▄░▄▄▄░░░█▀▀░█▀▀░█▀▀░█▀▀░█░░░░█░░▀▀█░░░█▀▀░█░█░█░█░█░░░░█░░░█░░█░█░█░█░▀▀█░▄▄▄░▄▄▄
+// ░░░░░░░░░░░▀▀▀░▀░░░▀░░░▀▀▀░▀▀▀░░▀░░▀▀▀░░░▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀░░░░░░░░
 
 // ░█▀▀░█▀█░▀█▀░█▀█░░░█▀▀░█▀█░█░░░█▀█░█▀▄░░░█░█░█▀█░█░█░█▀▀
 // ░▀▀█░█▀▀░░█░░█░█░░░█░░░█░█░█░░░█░█░█▀▄░░░█▄█░█▀█░▀▄▀░█▀▀
