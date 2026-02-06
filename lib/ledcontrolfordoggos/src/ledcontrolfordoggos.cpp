@@ -309,22 +309,28 @@ void generic_LedDevice::LightLeds(int NUMLEDS, CRGB color)
 	for (int i = 0; i < NUMLEDS; i++)
 		p_objectLedArray[i] = color;
 };
-
+/*SINGLELEDCHASE
+ One LED at a time lights sequentially, proceeding from first LED to last
+and repeating. After each full cycle of lighting each LED once, the function
+moves on to the next color in the palette argument, cycling through those as well.
+	Parameters
+speed - number of milliseconds before progressing to next LED
+palette - the palette of colors to cycle through
+fade - percentage by which to fade LEDs after each frame (default 1, no fade)
+*/
 void generic_LedDevice::SingleLedChase(int speed, const CRGB* palette, float fadeAmount)
 {
 	const int FRAMELIMIT = NUMLEDS;
 	if (!CheckTimeForFrameDraw(speed, p_activeTimer))	// manage frame write timing
 		return;		
 		
-	FadeLeds(NUMLEDS,fadeAmount);
+	FadeLeds(NUMLEDS,fadeAmount);  					//fade all LEDs by percentage
 
 	p_objectLedArray[*p_activeFrameCounter] = savedColor;	// light LED matching frame number
 		
 	AdvanceColor(palette, FRAMELIMIT, speed);		// manage color progression	
 	AdvanceFrame(speed, FRAMELIMIT);				// manage frame advancement
 };
-
-
 
 
 			// ░█▀▀░█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░▀█▀░█▀▀░░░█▀▀░█▀█░█▀█░░░█▀▀░█░░░█▀█░█▀▀░█▀▀
