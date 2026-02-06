@@ -310,6 +310,12 @@ void generic_LedDevice::LightLeds(int NUMLEDS, CRGB color)
 		p_objectLedArray[i] = color;
 };
 
+/*SPINCOLORWAVE
+Cycles all of calling object's LEDs through colors in a passed palette, one at a time.
+	Parameters:
+speed: Time between each LED in millseconds
+palette: palette of colors to cycle through
+*/
 void generic_LedDevice::SpinColorWave(int speed, const CRGB* palette)
 
 {
@@ -326,15 +332,6 @@ void generic_LedDevice::SpinColorWave(int speed, const CRGB* palette)
 	AdvanceFrame(speed, FRAMELIMIT);  				  	// manage frame advancement	
 };
 
-
-			// ░█▀▀░█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░▀█▀░█▀▀░░░█▀▀░█▀█░█▀█░░░█▀▀░█░░░█▀█░█▀▀░█▀▀
-			// ░█░░░█░░░▄▄▄░█░█░█▀▀░█░█░█▀▀░█▀▄░░█░░█░░░░░█▀▀░█▀█░█░█░░░█░░░█░░░█▀█░▀▀█░▀▀█
-			// ░▀▀▀░▀▀▀░░░░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░░░▀░░░▀░▀░▀░▀░░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀
-
-// ░░░░░░░░░░░█▀▀░█▀▀░█▀▀░█▀▀░█▀▀░▀█▀░█▀▀░░░█▀▀░█░█░█▀█░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀░░░░░░░░
-// ░▄▄▄░▄▄▄░░░█▀▀░█▀▀░█▀▀░█▀▀░█░░░░█░░▀▀█░░░█▀▀░█░█░█░█░█░░░░█░░░█░░█░█░█░█░▀▀█░▄▄▄░▄▄▄
-// ░░░░░░░░░░░▀▀▀░▀░░░▀░░░▀▀▀░▀▀▀░░▀░░▀▀▀░░░▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀░░░░░░░░
-
 // ░█▀▀░█▀█░▀█▀░█▀█░░░█▀▀░█▀█░█░░░█▀█░█▀▄░░░█░█░█▀█░█░█░█▀▀░░░█▀▀░█▀█░█▀▄░█▀▀
 // ░▀▀█░█▀▀░░█░░█░█░░░█░░░█░█░█░░░█░█░█▀▄░░░█▄█░█▀█░▀▄▀░█▀▀░░░█▀▀░█▀█░█░█░█▀▀
 // ░▀▀▀░▀░░░▀▀▀░▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░░░▀░▀░▀░▀░░▀░░▀▀▀░░░▀░░░▀░▀░▀▀░░▀▀▀
@@ -343,7 +340,7 @@ void generic_LedDevice::SpinColorWave(int speed, const CRGB* palette)
 // speed - time in milliseconds between frame
 // palette - color palette used for effect
 // fadeAmount - factor by which to multiply each led value at each frame until rewritten with new frame
-void generic_Fan::SpinColorWaveFade(int speed, const CRGB* palette, float fadeAmount /* 0.3 */)
+void generic_LedDevice::SpinColorWaveFade(int speed, const CRGB* palette, float fadeAmount /* 0.3 */)
 {
 	const int FRAMELIMIT = NUMLEDS;
 	if (!CheckTimeForFrameDraw(speed, p_activeTimer))	// manage frame write timing
@@ -356,7 +353,16 @@ void generic_Fan::SpinColorWaveFade(int speed, const CRGB* palette, float fadeAm
 	AdvanceColor(palette, FRAMELIMIT, speed);		// manage color progression	
 	AdvanceFrame(speed, FRAMELIMIT);				// manage frame advancement
 };
-	
+
+
+			// ░█▀▀░█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░▀█▀░█▀▀░░░█▀▀░█▀█░█▀█░░░█▀▀░█░░░█▀█░█▀▀░█▀▀
+			// ░█░░░█░░░▄▄▄░█░█░█▀▀░█░█░█▀▀░█▀▄░░█░░█░░░░░█▀▀░█▀█░█░█░░░█░░░█░░░█▀█░▀▀█░▀▀█
+			// ░▀▀▀░▀▀▀░░░░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░░░▀░░░▀░▀░▀░▀░░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀
+
+// ░░░░░░░░░░░█▀▀░█▀▀░█▀▀░█▀▀░█▀▀░▀█▀░█▀▀░░░█▀▀░█░█░█▀█░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀░░░░░░░░
+// ░▄▄▄░▄▄▄░░░█▀▀░█▀▀░█▀▀░█▀▀░█░░░░█░░▀▀█░░░█▀▀░█░█░█░█░█░░░░█░░░█░░█░█░█░█░▀▀█░▄▄▄░▄▄▄
+// ░░░░░░░░░░░▀▀▀░▀░░░▀░░░▀▀▀░▀▀▀░░▀░░▀▀▀░░░▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀░░░░░░░░
+
 // ░█▀▀░█▀█░▀█▀░█▀█░░░█░░░█▀▀░█▀▄░█▀▀
 // ░▀▀█░█▀▀░░█░░█░█░░░█░░░█▀▀░█░█░▀▀█
 // ░▀▀▀░▀░░░▀▀▀░▀░▀░░░▀▀▀░▀▀▀░▀▀░░▀▀▀

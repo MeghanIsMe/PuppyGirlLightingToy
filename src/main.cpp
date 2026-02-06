@@ -8,7 +8,7 @@ Contains driving code for running aRGB effects on hardware configured on my desk
 https://www.asciiart.eu/text-to-ascii-art - pagga
 
 	TO-DOs
-Add default speeds (and other default values like fade percentage in SpinColorWaveFade)
+Add default speeds (and other default values like fade percentage in SpinColorWaveFadeFans)
 ************************************************************/
 
 // dependancy inclusions
@@ -42,7 +42,7 @@ system_Timer systemTimer;
 // Declaring test functions: each one will run the named effect on all relevant devices
 void TestFadeThroughColorsFans(int, const CRGB*);
 void TestSpinColorWave(int, const CRGB*);
-void TestSpinColorWaveFade(int, const CRGB*);
+void TestSpinColorWaveFadeFans(int, const CRGB*);
 void TestSpinLeds(int, CRGB, CRGB = CRGB::Black, CRGB = CRGB::Black);
 void TestSpinOneLed(int speed, const CRGB*);
 void TestMovingLine(int, const CRGB*);
@@ -72,7 +72,7 @@ void loop()
 	// test functions
 	// TestFadeThroughColorsFans(600, prideTransgender);
 	// TestSpinColorWave(100, prideTransgender);
-	// TestSpinColorWaveFade(100, prideTransgender);
+	// TestSpinColorWaveFadeFans(100, prideTransgender);
 
 	//RandomTest();
 
@@ -89,10 +89,11 @@ void loop()
 	systemLeds.virtualCPUFan[0].FadeThroughColors(3000,pinkBreathing);
 
 	//systemLeds.virtualLedStrip[0].ChaseWithFade(60,prideTransgender, .6,2);
-		
+	/*	
 	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(300, prideRainbow, 1,0,1,0);
 	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(-300, prideRainbow, 0,1,0,1);
-	
+	*/
+	systemLeds.virtualLedStrip[0].SpinColorWaveFade(30, prideRainbow, 0.80);
 	// I feel like it makes the most intuitive sense to make methods of the systemleds object copy arrays out to hardware-associated arrays instead of
 	// using individual fan object methods. It feels more like the system leds device is managing system operations and is separated froom the indvidual
 	// hardware objects
@@ -130,12 +131,12 @@ void TestSpinColorWave(int speed, const CRGB* palette)
 	systemLeds.virtualCPUFan[0].SpinColorWave(speed, palette);
 };
 
-void TestSpinColorWaveFade(int speed, const CRGB* palette)
+void TestSpinColorWaveFadeFans(int speed, const CRGB* palette)
 {
-	systemLeds.virtualAspectFan[0].SpinColorWaveFade(speed, palette);
-	systemLeds.virtualAspectFan[1].SpinColorWaveFade(speed * -1, palette);
-	systemLeds.virtualAspectFan[2].SpinColorWaveFade(speed, palette);
-	systemLeds.virtualCPUFan[0].SpinColorWaveFade(speed, palette);
+	systemLeds.virtualAspectFan[0].SpinColorWaveFade(speed, palette,0.8);
+	systemLeds.virtualAspectFan[1].SpinColorWaveFade(speed * -1, palette,0.8);
+	systemLeds.virtualAspectFan[2].SpinColorWaveFade(speed, palette,0.8);
+	systemLeds.virtualCPUFan[0].SpinColorWaveFade(speed, palette,0.8);
 };
 
 void TestSpinLeds(int speed, CRGB color1, CRGB color2, CRGB color3)
@@ -185,7 +186,7 @@ void RandomTest()
 			else if (rand == 1)
 				systemLeds.virtualAspectFan[0].SpinColorWave(speed,paletteUsed);
 			else if (rand == 2)
-				systemLeds.virtualAspectFan[0].SpinColorWaveFade(speed,paletteUsed);
+				systemLeds.virtualAspectFan[0].SpinColorWaveFadeFans(speed,paletteUsed);
 			else if (rand == 3)
 				systemLeds.virtualAspectFan[0].SpinLeds(speed,MakeRandomColor(),MakeRandomColor() );
 			else if (rand == 4)
@@ -200,7 +201,7 @@ void RandomTest()
 			else if (rand == 1)
 				systemLeds.virtualAspectFan[1].SpinColorWave(speed,paletteUsed);
 			else if (rand == 2)
-				systemLeds.virtualAspectFan[1].SpinColorWaveFade(speed,paletteUsed);
+				systemLeds.virtualAspectFan[1].SpinColorWaveFadeFans(speed,paletteUsed);
 			else if (rand == 3)
 				systemLeds.virtualAspectFan[1].SpinLeds(speed,MakeRandomColor(),MakeRandomColor() );
 			else if (rand == 4)
@@ -215,7 +216,7 @@ void RandomTest()
 			else if (rand == 1)
 				systemLeds.virtualAspectFan[2].SpinColorWave(speed,paletteUsed);
 			else if (rand == 2)
-				systemLeds.virtualAspectFan[2].SpinColorWaveFade(speed,paletteUsed);
+				systemLeds.virtualAspectFan[2].SpinColorWaveFadeFans(speed,paletteUsed);
 			else if (rand == 3)
 				systemLeds.virtualAspectFan[2].SpinLeds(speed,MakeRandomColor(),MakeRandomColor() );
 			else if (rand == 4)
@@ -230,7 +231,7 @@ void RandomTest()
 			else if (rand == 1)
 				systemLeds.virtualCPUFan[1].SpinColorWave(speed,paletteUsed);
 			else if (rand == 2)
-				systemLeds.virtualCPUFan[1].SpinColorWaveFade(speed,paletteUsed);
+				systemLeds.virtualCPUFan[1].SpinColorWaveFadeFans(speed,paletteUsed);
 			else if (rand == 3)
 				systemLeds.virtualCPUFan[1].SpinLeds(speed,MakeRandomColor(),MakeRandomColor() );
 			else if (rand == 4)
