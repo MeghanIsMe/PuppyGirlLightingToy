@@ -64,6 +64,8 @@ class generic_LedDevice
 	void FadeLeds(int, float);				// fade all of object's LEDS by an amount
 	void FadeThroughColors(int, const CRGB*); //fade from color to color from a palette
 	void LightLeds(int, CRGB);				// set all of object's LEDs to passed color
+	//effects functions that act on all LEDs asynchronously
+	void SpinColorWave(int, const CRGB*);
 };
 
 // ░█▀▀░█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░▀█▀░█▀▀░░░█▀▀░█▀█░█▀█
@@ -82,7 +84,6 @@ class generic_Fan : public generic_LedDevice
 	// test functions
 	
 	// effects functions
-	void SpinColorWaveFans(int, const CRGB*);			// Waves of color rotate around fan
 	void SpinColorWaveFade(int, const CRGB*, float = .3);	// waves of color rotate around fan and fade out	
 	void SpinLeds(int, CRGB, CRGB = BLACK, CRGB = BLACK);	//Spin 1-3 LEDs around a fan
 	void SpinOneLed(int, const CRGB*);				// One LED rotates around fan
