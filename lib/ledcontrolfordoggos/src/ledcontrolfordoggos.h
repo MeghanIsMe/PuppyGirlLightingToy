@@ -58,11 +58,11 @@ class generic_LedDevice
 	void CopyToExternalArray(CRGB*);
 	void AdvanceColor(const CRGB*, int, int);	// acts on savedColor and paletteColorIndex to progress color
 	void AdvanceFrame(int, int); 			// acts on p_activeFrameCounter to progress frame number	
-	// effects functions
+	//effects functions that act on all LEDs synchronously
 	void BlankLeds(int);					// sets all of object's LEDS to black(off)
 	void BlinkLeds(int, const CRGB*);		// blink all of objects's LEDS the same color following palette order
 	void FadeLeds(int, float);				// fade all of object's LEDS by an amount
-	void FadeThroughColors(int, const CRGB*);
+	void FadeThroughColors(int, const CRGB*); //fade from color to color from a palette
 	void LightLeds(int, CRGB);				// set all of object's LEDs to passed color
 };
 
@@ -82,7 +82,7 @@ class generic_Fan : public generic_LedDevice
 	// test functions
 	
 	// effects functions
-	void SpinColorWave(int, const CRGB*);			// Waves of color rotate around fan
+	void SpinColorWaveFans(int, const CRGB*);			// Waves of color rotate around fan
 	void SpinColorWaveFade(int, const CRGB*, float = .3);	// waves of color rotate around fan and fade out	
 	void SpinLeds(int, CRGB, CRGB = BLACK, CRGB = BLACK);	//Spin 1-3 LEDs around a fan
 	void SpinOneLed(int, const CRGB*);				// One LED rotates around fan

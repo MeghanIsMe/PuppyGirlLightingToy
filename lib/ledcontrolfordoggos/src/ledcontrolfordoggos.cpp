@@ -322,11 +322,11 @@ void generic_LedDevice::LightLeds(int NUMLEDS, CRGB color)
 // ░█▀▀░█▀█░▀█▀░█▀█░░░█▀▀░█▀█░█░░░█▀█░█▀▄░░░█░█░█▀█░█░█░█▀▀
 // ░▀▀█░█▀▀░░█░░█░█░░░█░░░█░█░█░░░█░█░█▀▄░░░█▄█░█▀█░▀▄▀░█▀▀
 // ░▀▀▀░▀░░░▀▀▀░▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░░░▀░▀░▀░▀░░▀░░▀▀▀
-//Lights each LED around an Aspect fan sequentially, leaves them on, and repeats with a new color
+//Lights each LED around a fan sequentially, leaves them on, and repeats with a new color
 //		Parameters:
 // speed - time in milliseconds between frame
 // palette - color palette used for effect
-void generic_Fan::SpinColorWave(int speed, const CRGB* palette)
+void generic_Fan::SpinColorWaveFans(int speed, const CRGB* palette)
 
 {
 	const int FRAMELIMIT = NUMLEDS;
@@ -335,7 +335,7 @@ void generic_Fan::SpinColorWave(int speed, const CRGB* palette)
 	if (!CheckTimeForFrameDraw(speed, p_activeTimer))	// manage frame write timing
 		return;		
 
-	p_objectLedArray[frameNumber] = savedColor;			// lighting led corresponding to current frame number
+	p_objectLedArray[*p_activeFrameCounter] = savedColor;			// lighting led corresponding to current frame number
 	//SerialPrintColor(leds[frameNumber]);
 	
 	AdvanceColor(palette, FRAMELIMIT, speed);			// manage color progression	

@@ -80,8 +80,8 @@ void loop()
 	//systemLeds.virtualAspectFan[0].SpinLeds(100,CRGB::HotPink, CRGB::Aquamarine);
 	//systemLeds.virtualAspectFan[1].SpinColorWave(-150, prideLesbian);
 
-	systemLeds.virtualAspectFan[2].FadeThroughColors(2000, pinkBreathing);
-	//systemLeds.virtualAspectFan[2].SpinOneLed(60, prideTransgender );
+	//systemLeds.virtualAspectFan[2].FadeThroughColors(2000, pinkBreathing);
+	systemLeds.virtualAspectFan[2].SpinColorWaveFans(60, prideTransgender );
 
 	systemLeds.virtualDualAspectFans[0].MovingLineDualAspect(100, prideLesbian);
 	//systemLeds.virtualDualAspectFans[0].StackFill(100, prideLesbian);
@@ -122,12 +122,12 @@ void TestFadeThroughColorsFans(int speed, const CRGB* palette)
 	systemLeds.virtualCPUFan[0].FadeThroughColors(speed, palette);
 };
 
-void TestSpinColorWave(int speed, const CRGB* palette)
+void TestSpinColorWaveFans(int speed, const CRGB* palette)
 {
-	systemLeds.virtualAspectFan[0].SpinColorWave(speed, palette);
-	systemLeds.virtualAspectFan[1].SpinColorWave(speed * -1, palette);
-	systemLeds.virtualAspectFan[2].SpinColorWave(speed, palette);
-	systemLeds.virtualCPUFan[0].SpinColorWave(speed, palette);
+	systemLeds.virtualAspectFan[0].SpinColorWaveFans(speed, palette);
+	systemLeds.virtualAspectFan[1].SpinColorWaveFans(speed * -1, palette);
+	systemLeds.virtualAspectFan[2].SpinColorWaveFans(speed, palette);
+	systemLeds.virtualCPUFan[0].SpinColorWaveFans(speed, palette);
 };
 
 void TestSpinColorWaveFade(int speed, const CRGB* palette)
