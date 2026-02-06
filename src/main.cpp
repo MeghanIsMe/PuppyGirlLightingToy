@@ -42,7 +42,7 @@ system_Timer systemTimer;
 // Declaring test functions: each one will run the named effect on all relevant devices
 void TestFadeThroughColorsFans(int, const CRGB*);
 void TestSpinColorWave(int, const CRGB*);
-void TestSpinColorWaveFadeFans(int, const CRGB*);
+void TestSpinColorWaveFadeFans(int, const CRGB*);  //REMOVE AND REPLACE SINGLELEDCHASE
 void TestSpinLeds(int, CRGB, CRGB = CRGB::Black, CRGB = CRGB::Black);
 void TestSpinOneLed(int speed, const CRGB*);
 void TestMovingLine(int, const CRGB*);
@@ -81,7 +81,7 @@ void loop()
 	//systemLeds.virtualAspectFan[1].SpinColorWave(-150, prideLesbian);
 
 	//systemLeds.virtualAspectFan[2].FadeThroughColors(2000, pinkBreathing);
-	systemLeds.virtualAspectFan[2].SpinColorWave(60, prideTransgender );
+	systemLeds.virtualAspectFan[2].SingleLedChase(60, prideTransgender);
 
 	systemLeds.virtualDualAspectFans[0].MovingLineDualAspect(100, prideLesbian);
 	//systemLeds.virtualDualAspectFans[0].StackFill(100, prideLesbian);
@@ -93,7 +93,7 @@ void loop()
 	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(300, prideRainbow, 1,0,1,0);
 	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(-300, prideRainbow, 0,1,0,1);
 	*/
-	systemLeds.virtualLedStrip[0].SpinColorWaveFade(30, prideRainbow, 0.80);
+	systemLeds.virtualLedStrip[0].SingleLedChase(30, prideRainbow,0.8);
 	// I feel like it makes the most intuitive sense to make methods of the systemleds object copy arrays out to hardware-associated arrays instead of
 	// using individual fan object methods. It feels more like the system leds device is managing system operations and is separated froom the indvidual
 	// hardware objects
@@ -123,20 +123,20 @@ void TestFadeThroughColorsFans(int speed, const CRGB* palette)
 	systemLeds.virtualCPUFan[0].FadeThroughColors(speed, palette);
 };
 
-void TestSpinColorWave(int speed, const CRGB* palette)
+void TestSingleLedChase(int speed, const CRGB* palette)
 {
-	systemLeds.virtualAspectFan[0].SpinColorWave(speed, palette);
-	systemLeds.virtualAspectFan[1].SpinColorWave(speed * -1, palette);
-	systemLeds.virtualAspectFan[2].SpinColorWave(speed, palette);
-	systemLeds.virtualCPUFan[0].SpinColorWave(speed, palette);
+	systemLeds.virtualAspectFan[0].SingleLedChase(speed, palette);
+	systemLeds.virtualAspectFan[1].SingleLedChase(speed * -1, palette);
+	systemLeds.virtualAspectFan[2].SingleLedChase(speed, palette);
+	systemLeds.virtualCPUFan[0].SingleLedChase(speed, palette);
 };
 
 void TestSpinColorWaveFadeFans(int speed, const CRGB* palette)
 {
-	systemLeds.virtualAspectFan[0].SpinColorWaveFade(speed, palette,0.8);
-	systemLeds.virtualAspectFan[1].SpinColorWaveFade(speed * -1, palette,0.8);
-	systemLeds.virtualAspectFan[2].SpinColorWaveFade(speed, palette,0.8);
-	systemLeds.virtualCPUFan[0].SpinColorWaveFade(speed, palette,0.8);
+	systemLeds.virtualAspectFan[0].SingleLedChase(speed, palette,0.8);
+	systemLeds.virtualAspectFan[1].SingleLedChase(speed * -1, palette,0.8);
+	systemLeds.virtualAspectFan[2].SingleLedChase(speed, palette,0.8);
+	systemLeds.virtualCPUFan[0].SingleLedChase(speed, palette,0.8);
 };
 
 void TestSpinLeds(int speed, CRGB color1, CRGB color2, CRGB color3)

@@ -58,15 +58,15 @@ class generic_LedDevice
 	void CopyToExternalArray(CRGB*);
 	void AdvanceColor(const CRGB*, int, int);	// acts on savedColor and paletteColorIndex to progress color
 	void AdvanceFrame(int, int); 			// acts on p_activeFrameCounter to progress frame number	
-	//effects functions that act on all LEDs synchronously
+	//effects sub-functions
 	void BlankLeds(int);					// sets all of object's LEDS to black(off)
-	void BlinkLeds(int, const CRGB*);		// blink all of objects's LEDS the same color following palette order
 	void FadeLeds(int, float);				// fade all of object's LEDS by an amount
+	//effects functions that act on all LEDs synchronously
+	void BlinkLeds(int, const CRGB*);		// blink all of objects's LEDS the same color following palette order
 	void FadeThroughColors(int, const CRGB*); //fade from color to color from a palette
 	void LightLeds(int, CRGB);				// set all of object's LEDs to passed color
 	//effects functions that act on all LEDs asynchronously
-	void SpinColorWave(int, const CRGB*); 	//squentially switch each of object's LEDs to colors form passed palette
-	void SpinColorWaveFade(int, const CRGB*, float/* 0.3 */); //As SpinColorWave but with fading trail
+	void SingleLedChase(int, const CRGB*, float = 1.0); //chasing effect with optional fade
 };
 
 // ░█▀▀░█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░▀█▀░█▀▀░░░█▀▀░█▀█░█▀█

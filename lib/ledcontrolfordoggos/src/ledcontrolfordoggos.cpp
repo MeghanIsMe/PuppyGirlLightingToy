@@ -310,37 +310,7 @@ void generic_LedDevice::LightLeds(int NUMLEDS, CRGB color)
 		p_objectLedArray[i] = color;
 };
 
-/*SPINCOLORWAVE
-Cycles all of calling object's LEDs through colors in a passed palette, one at a time.
-	Parameters:
-speed: Time between each LED in millseconds
-palette: palette of colors to cycle through
-*/
-void generic_LedDevice::SpinColorWave(int speed, const CRGB* palette)
-
-{
-	const int FRAMELIMIT = NUMLEDS;
-
-	CheckInitialization();             // check to see if function has been given a start frame at first run 
-	if (!CheckTimeForFrameDraw(speed, p_activeTimer))	// manage frame write timing
-		return;		
-
-	p_objectLedArray[*p_activeFrameCounter] = savedColor;			// lighting led corresponding to current frame number
-	//SerialPrintColor(leds[frameNumber]);
-	
-	AdvanceColor(palette, FRAMELIMIT, speed);			// manage color progression	
-	AdvanceFrame(speed, FRAMELIMIT);  				  	// manage frame advancement	
-};
-
-// ░█▀▀░█▀█░▀█▀░█▀█░░░█▀▀░█▀█░█░░░█▀█░█▀▄░░░█░█░█▀█░█░█░█▀▀░░░█▀▀░█▀█░█▀▄░█▀▀
-// ░▀▀█░█▀▀░░█░░█░█░░░█░░░█░█░█░░░█░█░█▀▄░░░█▄█░█▀█░▀▄▀░█▀▀░░░█▀▀░█▀█░█░█░█▀▀
-// ░▀▀▀░▀░░░▀▀▀░▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░░░▀░▀░▀░▀░░▀░░▀▀▀░░░▀░░░▀░▀░▀▀░░▀▀▀
-// Rotates a light around a fan while leaving a trail that fades behind it
-//		Parameters:
-// speed - time in milliseconds between frame
-// palette - color palette used for effect
-// fadeAmount - factor by which to multiply each led value at each frame until rewritten with new frame
-void generic_LedDevice::SpinColorWaveFade(int speed, const CRGB* palette, float fadeAmount /* 0.3 */)
+void generic_LedDevice::SingleLedChase(int speed, const CRGB* palette, float fadeAmount)
 {
 	const int FRAMELIMIT = NUMLEDS;
 	if (!CheckTimeForFrameDraw(speed, p_activeTimer))	// manage frame write timing
@@ -353,6 +323,8 @@ void generic_LedDevice::SpinColorWaveFade(int speed, const CRGB* palette, float 
 	AdvanceColor(palette, FRAMELIMIT, speed);		// manage color progression	
 	AdvanceFrame(speed, FRAMELIMIT);				// manage frame advancement
 };
+
+
 
 
 			// ░█▀▀░█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░▀█▀░█▀▀░░░█▀▀░█▀█░█▀█░░░█▀▀░█░░░█▀█░█▀▀░█▀▀
@@ -723,6 +695,7 @@ void front_LedStrip::DetermineTimer(bool tl, bool tr, bool bl, bool br)
 // palette - color palette used for effect
 // fadeAmount - factor by which to multiply each LED at frameAdvance
 // lights * 1 * - the number of LEDs to use in the chasing effect
+//TO DO can now rewrite this to call SpinWaveFade if there is only one light
 void front_LedStrip::ChaseWithFade(int speed, const CRGB* palette, float fadeAmount, int lights /* 1 */)
 {
 	const int FRAMELIMIT = NUMLEDS;
