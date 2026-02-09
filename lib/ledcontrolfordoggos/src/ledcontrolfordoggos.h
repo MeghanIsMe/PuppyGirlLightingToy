@@ -258,15 +258,24 @@ class system_Timer
 	unsigned long currentMillis;
 	int deltaMillis;
 	int accumulatorHalfSecond;
+	int accumulatorOneSecond;
 	int counterHalfSecond;
+	int counterOneSecond;
 	int halfSecSawtooth;
+	int oneSecSawtooth;
+	
 	
 	system_Timer()	//constructor function
 	{
 		currentMillis = millis();
 		accumulatorHalfSecond = 0;
 		counterHalfSecond = 0;
+		accumulatorOneSecond = 0;
+		counterOneSecond = 0;
 		halfSecSawtooth = 0;
+		oneSecSawtooth = 0;
+		
+		
 	}
 
 	void UpdateSystemTimer();

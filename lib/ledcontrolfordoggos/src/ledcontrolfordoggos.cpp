@@ -957,20 +957,33 @@ void full_SystemLeds::TranslateCombinedAspectsToIndividualFans(int fan1, int fan
 void system_Timer::UpdateSystemTimer()
 {
 	pastMillis = currentMillis;
-	currentMillis = millis();
-	deltaMillis = currentMillis - pastMillis;
-	accumulatorHalfSecond += deltaMillis;
-	if (accumulatorHalfSecond > 500)
-	{
-		counterHalfSecond++;
+	currentMillis = millis();						//get time passed since system init
+	deltaMillis = currentMillis - pastMillis;	//determine time passed since last main loop execution
+	
+	accumulatorHalfSecond += deltaMillis;		//This loop forms a half second sawtooth
+	if (accumulatorHalfSecond > 500)				//halfsecond vars step from -800 to 800
+	{														//in steps of 25 each half second,
+		counterHalfSecond++;							//then repeat.
 		accumulatorHalfSecond = 0;	
 		halfSecSawtooth += 25;
 		if (halfSecSawtooth > 800)
 			halfSecSawtooth = -800;
 	}
+
+	accumulatorOneSecond += deltaMillis;		//This loop forms a one second sawtooth
+	if (accumulatorOneSecond > 1000)				//onesecond vars step from -800 to 800
+	{														//in steps of 25 each second,
+		counterOneSecond++;							//then repeat.
+		accumulatorOneSecond = 0;	
+		oneSecSawtooth += 25;
+		if (oneSecSawtooth > 800)
+			oneSecSawtooth = -800;
+	}
+	/*
 	Serial.print(accumulatorHalfSecond);
 	Serial.print(" - ");
 	Serial.println (counterHalfSecond);
+	*/
 }
 
 int system_Timer::GetDeltaMillis()
