@@ -37,20 +37,23 @@ class generic_LedDevice
 {
 	public:
 	// variables
-	int accumulatedMilliseconds; 		// running total of milliseconds passed since last time an effects function executed on this object
-	int frameNumber;					// which frame of the animation is currently being displayed on this object by an effects function
-	int NUMLEDS;						// how many LEDS are on this device. This should never change once set by a child class
-	int paletteColorIndex = 0; 			// for managing use of palette arrays passed to calling effects functions
-	bool initializedFrame;   			// whether frameNumber has been set to a specific starting frame
-	bool initializedColor; 				// whether paletterColorIndex has been set to a specific starting frame
-	CRGB savedColor;					// what color is currently being used to display the effects function on this object
+	int accumulatedMilliseconds; 	// running total of milliseconds passed since last time an effects function executed on this object
+	int frameNumber;				// which frame of the animation is currently being displayed on this object by an effects function
+	int NUMLEDS;					// how many LEDS are on this device. This should never change once set by a child class
+	int paletteColorIndex = 0; 		// for managing use of palette arrays passed to calling effects functions
+	bool initializedFrame;   		// whether frameNumber has been set to a specific starting frame
+	bool initializedColor; 			// whether paletterColorIndex has been set to a specific starting frame
+	CRGB savedColor;				// what color is currently being used to display the effects function on this object
 	// pointers
 	int* p_activeFrameCounter = &frameNumber;		// for effects that need multiple timers, these pointers allow the
 	int* p_activeTimer = &accumulatedMilliseconds;  // calling function to choose the appropriate frame and millisecond counters
-	CRGB* p_objectLedArray; 			// will point at a child object's array of LEDs once one is declared
-	
-	generic_LedDevice()					// constructor function
-	{}
+	CRGB* p_objectLedArray; 		// will point at a child object's array of LEDs once one is declared
+	int test; //testing variable timing effects
+
+	generic_LedDevice()				// constructor function
+	{
+		test = 0;
+	}
 	
 	//mangement functions
 	void CheckInitialization();				// Check whether to initialize frame number
@@ -254,10 +257,16 @@ class system_Timer
 	unsigned long pastMillis;
 	unsigned long currentMillis;
 	int deltaMillis;
+	int accumulatorHalfSecond;
+	int counterHalfSecond;
+	int halfSecSawtooth;
 	
-	system_Timer()
+	system_Timer()	//constructor function
 	{
 		currentMillis = millis();
+		accumulatorHalfSecond = 0;
+		counterHalfSecond = 0;
+		halfSecSawtooth = 0;
 	}
 
 	void UpdateSystemTimer();

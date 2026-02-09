@@ -327,7 +327,7 @@ void generic_LedDevice::SingleLedChase(int speed, const CRGB* palette, float fad
 	FadeLeds(NUMLEDS,fadeAmount);  					//fade all LEDs by percentage
 
 	p_objectLedArray[*p_activeFrameCounter] = savedColor;	// light LED matching frame number
-		
+			
 	AdvanceColor(palette, FRAMELIMIT, speed);		// manage color progression	
 	AdvanceFrame(speed, FRAMELIMIT);				// manage frame advancement
 };
@@ -959,6 +959,18 @@ void system_Timer::UpdateSystemTimer()
 	pastMillis = currentMillis;
 	currentMillis = millis();
 	deltaMillis = currentMillis - pastMillis;
+	accumulatorHalfSecond += deltaMillis;
+	if (accumulatorHalfSecond > 500)
+	{
+		counterHalfSecond++;
+		accumulatorHalfSecond = 0;	
+		halfSecSawtooth += 25;
+		if (halfSecSawtooth > 800)
+			halfSecSawtooth = -800;
+	}
+	Serial.print(accumulatorHalfSecond);
+	Serial.print(" - ");
+	Serial.println (counterHalfSecond);
 }
 
 int system_Timer::GetDeltaMillis()

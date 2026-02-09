@@ -81,19 +81,19 @@ void loop()
 	//systemLeds.virtualAspectFan[1].SpinColorWave(-150, prideLesbian);
 
 	//systemLeds.virtualAspectFan[2].FadeThroughColors(2000, pinkBreathing);
-	systemLeds.virtualAspectFan[2].SingleLedChase(60, prideTransgender);
+	systemLeds.virtualAspectFan[2].SingleLedChase(systemTimer.halfSecSawtooth, prideRainbow,0.5);
 
 	systemLeds.virtualDualAspectFans[0].MovingLineDualAspect(100, prideLesbian);
 	//systemLeds.virtualDualAspectFans[0].StackFill(100, prideLesbian);
 
-	systemLeds.virtualCPUFan[0].FadeThroughColors(3000,pinkBreathing);
+	systemLeds.virtualCPUFan[0].SingleLedChase(100,prideRainbow,0.5);
 
 	//systemLeds.virtualLedStrip[0].ChaseWithFade(60,prideTransgender, .6,2);
-	/*	
-	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(300, prideRainbow, 1,0,1,0);
-	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(-300, prideRainbow, 0,1,0,1);
-	*/
-	systemLeds.virtualLedStrip[0].SingleLedChase(30, prideRainbow,0.8);
+		
+	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(300, prideTransgender, 1,0,1,0);
+	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(-300, prideLesbian, 0,1,0,1);
+	
+	//systemLeds.virtualLedStrip[0].SingleLedChase(30, prideRainbow,0.8);
 	// I feel like it makes the most intuitive sense to make methods of the systemleds object copy arrays out to hardware-associated arrays instead of
 	// using individual fan object methods. It feels more like the system leds device is managing system operations and is separated froom the indvidual
 	// hardware objects
