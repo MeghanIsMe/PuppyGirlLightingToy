@@ -963,13 +963,32 @@ void system_Timer::UpdateSystemTimer()
 	accumulatorHalfSecond += deltaMillis;		//This loop forms a half second sawtooth
 	if (accumulatorHalfSecond > 500)				//halfsecond vars step from -800 to 800
 	{														//in steps of 25 each half second,
-		counterHalfSecond++;							//then repeat.
+		//sawtooth stuff
 		accumulatorHalfSecond = 0;	
 		halfSecSawtooth += 25;
 		if (halfSecSawtooth > 800)
-			halfSecSawtooth = -800;
+			halfSecSawtooth = -800;			
+		
+		//triangle stuff
+		
+		//keeps spin from reversing at fastest speed
+		if (halfSecReverse)			
+			halfSecTriangle -= 25;
+		else
+			halfSecTriangle += 25;
+		//reverse at 25 instead of 0 to prevent bouncing around 0
+		if ((halfSecTriangle == 25) || (halfSecTriangle == -25))
+			halfSecReverse = !halfSecReverse;
+			
+		if (halfSecTriangle == 800)
+			halfSecTriangle = -800;
+		else if (halfSecTriangle == -800)
+			halfSecTriangle = 800;		
+		Serial.println(halfSecTriangle);
 	}
+	
 
+	//could simplify up one second timer to run based on 1/2 sec timer somehow
 	accumulatorOneSecond += deltaMillis;		//This loop forms a one second sawtooth
 	if (accumulatorOneSecond > 1000)				//onesecond vars step from -800 to 800
 	{														//in steps of 25 each second,

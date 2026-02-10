@@ -258,22 +258,31 @@ class system_Timer
 	unsigned long currentMillis;
 	int deltaMillis;
 	int accumulatorHalfSecond;
-	int accumulatorOneSecond;
 	int counterHalfSecond;
-	int counterOneSecond;
 	int halfSecSawtooth;
+	int halfSecTriangle;
+	int halfSecTriangleZeroCheck;
+	bool halfSecReverse;
+	int accumulatorOneSecond;
+	int counterOneSecond;
 	int oneSecSawtooth;
+	
 	
 	
 	system_Timer()	//constructor function
 	{
 		currentMillis = millis();
-		accumulatorHalfSecond = 0;
-		counterHalfSecond = 0;
+		//for timers with half second base
+		accumulatorHalfSecond = 0;		
+		halfSecSawtooth = 0;
+		halfSecReverse = 0;
+		halfSecTriangleZeroCheck = 0;
+		halfSecTriangle = 25; //start at 25 to avoid premature reverse at 0
+		//for timers with 1 second base
 		accumulatorOneSecond = 0;
 		counterOneSecond = 0;
-		halfSecSawtooth = 0;
 		oneSecSawtooth = 0;
+		
 		
 		
 	}

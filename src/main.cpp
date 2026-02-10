@@ -81,12 +81,12 @@ void loop()
 	//systemLeds.virtualAspectFan[1].SpinColorWave(-150, prideLesbian);
 
 	//systemLeds.virtualAspectFan[2].FadeThroughColors(2000, pinkBreathing);
-	systemLeds.virtualAspectFan[2].SingleLedChase(systemTimer.oneSecSawtooth, prideRainbow,0.5);
+	systemLeds.virtualAspectFan[2].SingleLedChase(systemTimer.halfSecTriangle, prideRainbow,0.5);
 
 	systemLeds.virtualDualAspectFans[0].MovingLineDualAspect(100, prideLesbian);
 	//systemLeds.virtualDualAspectFans[0].StackFill(100, prideLesbian);
 
-	systemLeds.virtualCPUFan[0].SingleLedChase(100,prideRainbow,0.5);
+	systemLeds.virtualCPUFan[0].SingleLedChase((-1 * systemTimer.halfSecTriangle),prideRainbow,0.5);
 
 	//systemLeds.virtualLedStrip[0].ChaseWithFade(60,prideTransgender, .6,2);
 		
