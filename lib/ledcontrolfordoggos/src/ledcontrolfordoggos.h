@@ -266,8 +266,8 @@ class system_Timer
 	int accumulatorOneSecond;
 	int counterOneSecond;
 	int oneSecSawtooth;
-	
-	
+	int oneSecTriangle;
+	bool sawToothReverse;	
 	
 	system_Timer()	//constructor function
 	{
@@ -282,13 +282,36 @@ class system_Timer
 		accumulatorOneSecond = 0;
 		counterOneSecond = 0;
 		oneSecSawtooth = 0;
-		
-		
-		
+		sawToothReverse = 0;
+		oneSecTriangle = 25;		
 	}
 
 	void UpdateSystemTimer();
 	int GetDeltaMillis();
+};
+
+class sawtooth_Timer
+{
+	public:
+
+	int stepTime;		//time in milliseconds between speed change
+	int accumulator;	//adding up time until speed change
+	int speed;			//starting 
+	int stepSize;		//size of change between speed steps
+	int maxSpeed;		//highest speed - triggers inversion
+	
+	sawtooth_Timer(int a, int b, int c)		//constructor function
+	{
+		stepTime = a;
+		stepSize = b;
+		maxSpeed = c;
+		//stepSize = 25;
+		//maxSpeed = 800;
+		accumulator = 0;
+	}
+
+	void Update();
+	int GetSpeed();
 };
 
 #endif
