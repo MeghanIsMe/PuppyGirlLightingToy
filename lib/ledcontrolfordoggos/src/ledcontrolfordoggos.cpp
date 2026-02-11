@@ -966,20 +966,20 @@ int system_Timer::GetDeltaMillis()
 	return deltaMillis;
 };
 
-//CLASS SAWTOOTH TIMER
+//CLASS SAWTOOTH_TIMER
+//Uses parameters passed as arguments to create a speed value used by
+//light effect functions for timing.
+//cycle: steps UPWARD to maxSpeed, then drops to -maxSpeed											
 void sawtooth_Timer::Update()
 {
-	accumulator += deltaMillis;	
-	if (accumulator >= stepTime)
+	accumulator += deltaMillis;		//add passed time to accumulator
+	if (accumulator >= stepTime)		//triggers next speed change step
 	{
 		speed += stepSize;
 		accumulator = 0;
-		if (speed >= maxSpeed)
-			speed = (speed * -1);
-		/*
-		Serial.print("Speed is now ");
-		Serial.println(speed);
-		*/
+		if (speed >= maxSpeed)			//Change direction of spin by
+			speed = (speed * -1);		//inverting it
+												
 	}
 }
 
@@ -988,6 +988,12 @@ int sawtooth_Timer::GetSpeed()
 	return speed;
 }
 
+//CLASS TRIANGLE_TIMER
+//Uses parameters passed as arguments to create a speed value used by
+//light effect functions for timing.
+//cycle: 1) steps UPWARD to maxSpeed 2) steps DOWNWARD to 0
+//			3) jumps to -maxSpeed  4) steps upward to 0
+//			5) steps downard to maxSpeed  6) jumps to maxSpeed
 void triangle_Timer::Update()
 {
 	accumulator += deltaMillis;	
@@ -1003,11 +1009,9 @@ void triangle_Timer::Update()
 			speed = (-1 * maxSpeed);
 		else if (speed <= (-1 * maxSpeed))
 			speed = (maxSpeed);
-		else if (!reverse && (speed <= stepSize))
-			reverse = true;
-		else if (reverse && (speed <= stepSize))
-			reverse = false;		
-		
+		if (abs(speed) <= stepSize)
+			reverse = !reverse;
+		Serial.println(reverse);
 		Serial.print("Speed is now ");
 		Serial.println(speed);		
 	}

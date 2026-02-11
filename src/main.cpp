@@ -40,7 +40,7 @@ full_SystemLeds systemLeds;
 system_Timer systemTimer;
 
 sawtooth_Timer sawtooth1(600,25,500);		//time, size, speed
-triangle_Timer triangle1(1000, 25, 500);	//time, size, speed
+triangle_Timer triangle1(400, 5, 100);	//time, size, speed
 
 
 // Declaring test functions: each one will run the named effect on all relevant devices

@@ -287,17 +287,17 @@ class system_Timer
 	int GetDeltaMillis();
 };
 
-/*CLASS SAWTOOTH_TIMER
-Uses parameters passed as arguments to create a speed value used by
-light effect functions for timing.
-*/
+//CLASS SAWTOOTH_TIMER
+//Uses parameters passed as arguments to create a speed value used by
+//light effect functions for timing.
+
 class sawtooth_Timer
 {
 	public:
 
 	int stepTime;		//time in milliseconds between speed change
 	int accumulator;	//adding up time until speed change
-	int speed;			//starting 
+	int speed;			//speed for functions running on this timer
 	int stepSize;		//size of change between speed steps
 	int maxSpeed;		//highest speed - triggers inversion
 	
@@ -305,9 +305,7 @@ class sawtooth_Timer
 	{
 		stepTime = a;
 		stepSize = b;
-		maxSpeed = c;
-		//stepSize = 25;
-		//maxSpeed = 800;
+		maxSpeed = c;	
 		accumulator = 0;
 	}
 	
@@ -315,16 +313,19 @@ class sawtooth_Timer
 	int GetSpeed();
 };
 
+//CLASS TRIANGLE_TIMER
+//Uses parameters passed as arguments to create a speed value used by
+//light effect functions for timing.
 class triangle_Timer
 {
 	public:
 
-	int accumulator;
-	int stepTime;
-	int stepSize;
-	int maxSpeed;
-	int speed;
-	bool reverse;
+	int accumulator;	//tracking passed milliseconds between steps
+	int stepTime;		//number of milliseconds between steps
+	int stepSize;		//how much speed will change between steps
+	int maxSpeed;		//boundray for speed
+	int speed;			//speed for functions running on this timer
+	bool reverse;		//to manage adding vs. subracting speed appropriately
 
 	triangle_Timer(int a, int b, int c) //constructor function
 
@@ -333,11 +334,11 @@ class triangle_Timer
 		stepTime = a;
 		stepSize = b;
 		maxSpeed = c;
-		speed = stepSize * 2;		
+		speed = stepSize * 2;	//if speed starts at stepSize, it bounces around 0
 		reverse = false;
 	}
 
-	void Update();
-	int GetSpeed();
+	void Update();		//updates timer and calculates current speed
+	int GetSpeed();	//returns current speed
 };
 #endif
