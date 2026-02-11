@@ -959,39 +959,6 @@ void system_Timer::UpdateSystemTimer()
 	pastMillis = currentMillis;
 	currentMillis = millis();						//get time passed since system init
 	deltaMillis = currentMillis - pastMillis;	//determine time passed since last main loop execution
-	
-	accumulatorHalfSecond += deltaMillis;		//This loop forms a half second sawtooth
-	if (accumulatorHalfSecond > 500)				//halfsecond vars step from -800 to 800
-	{														//in steps of 25 each half second,
-		//-----sawtooth stuff-----
-		accumulatorHalfSecond = 0;	
-		halfSecSawtooth += 25;
-		if (halfSecSawtooth > 800)
-			halfSecSawtooth = -800;			
-		
-		//-----triangle stuff-----		
-		//keeps spin from reversing at fastest speed
-		if (halfSecReverse)			
-			halfSecTriangle -= 25;
-		else
-			halfSecTriangle += 25;
-		//reverse at 25 instead of 0 to prevent bouncing around 0
-		if ((halfSecTriangle == 25) || (halfSecTriangle == -25))
-			halfSecReverse = !halfSecReverse;
-		//reverse at slowest part of spin
-		if (halfSecTriangle == 800)
-			halfSecTriangle = -800;		
-		else if (halfSecTriangle == -800)
-			halfSecTriangle = 800;
-
-		oneSecTriangle = (halfSecTriangle * 2);
-
-		/*
-		Serial.print(halfSecTriangle);
-		Serial.print(" - ");
-		Serial.println(oneSecTriangle);
-		*/
-	}
 }
 
 int system_Timer::GetDeltaMillis()
@@ -1002,26 +969,51 @@ int system_Timer::GetDeltaMillis()
 //CLASS SAWTOOTH TIMER
 void sawtooth_Timer::Update()
 {
-	accumulator += deltaMillis;
-	/*
-	Serial.print(stepTime);
-	Serial.print(" - ");
-	Serial.print(stepSize);
-	Serial.print(" - ");
-	Serial.println(maxSpeed);
-	*/
+	accumulator += deltaMillis;	
 	if (accumulator >= stepTime)
 	{
 		speed += stepSize;
 		accumulator = 0;
 		if (speed >= maxSpeed)
 			speed = (speed * -1);
+		/*
 		Serial.print("Speed is now ");
 		Serial.println(speed);
+		*/
 	}
 }
 
 int sawtooth_Timer::GetSpeed()
+{
+	return speed;
+}
+
+void triangle_Timer::Update()
+{
+	accumulator += deltaMillis;	
+	if (accumulator >= stepTime)
+	{
+		accumulator = 0;
+		if (reverse)			
+			speed -= stepSize;
+		else
+			speed += stepSize;
+
+		if (speed >= maxSpeed)
+			speed = (-1 * maxSpeed);
+		else if (speed <= (-1 * maxSpeed))
+			speed = (maxSpeed);
+		else if (!reverse && (speed <= stepSize))
+			reverse = true;
+		else if (reverse && (speed <= stepSize))
+			reverse = false;		
+		
+		Serial.print("Speed is now ");
+		Serial.println(speed);		
+	}
+}
+
+int triangle_Timer::GetSpeed()
 {
 	return speed;
 }

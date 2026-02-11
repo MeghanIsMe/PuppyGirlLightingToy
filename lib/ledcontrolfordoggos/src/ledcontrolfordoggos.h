@@ -274,15 +274,12 @@ class system_Timer
 		currentMillis = millis();
 		//for timers with half second base
 		accumulatorHalfSecond = 0;		
-		halfSecSawtooth = 0;
 		halfSecReverse = 0;
 		halfSecTriangleZeroCheck = 0;
 		halfSecTriangle = 25; //start at 25 to avoid premature reverse at 0
 		//for timers with 1 second base
 		accumulatorOneSecond = 0;
-		counterOneSecond = 0;
-		oneSecSawtooth = 0;
-		sawToothReverse = 0;
+		counterOneSecond = 0;			
 		oneSecTriangle = 25;		
 	}
 
@@ -290,6 +287,10 @@ class system_Timer
 	int GetDeltaMillis();
 };
 
+/*CLASS SAWTOOTH_TIMER
+Uses parameters passed as arguments to create a speed value used by
+light effect functions for timing.
+*/
 class sawtooth_Timer
 {
 	public:
@@ -309,9 +310,34 @@ class sawtooth_Timer
 		//maxSpeed = 800;
 		accumulator = 0;
 	}
-
+	
 	void Update();
 	int GetSpeed();
 };
 
+class triangle_Timer
+{
+	public:
+
+	int accumulator;
+	int stepTime;
+	int stepSize;
+	int maxSpeed;
+	int speed;
+	bool reverse;
+
+	triangle_Timer(int a, int b, int c) //constructor function
+
+	{
+		accumulator = 0;
+		stepTime = a;
+		stepSize = b;
+		maxSpeed = c;
+		speed = stepSize * 2;		
+		reverse = false;
+	}
+
+	void Update();
+	int GetSpeed();
+};
 #endif
