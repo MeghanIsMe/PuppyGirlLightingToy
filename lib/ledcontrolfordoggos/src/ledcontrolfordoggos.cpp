@@ -999,6 +999,14 @@ void triangle_Timer::Update()
 	accumulator += deltaMillis;	
 	if (accumulator >= stepTime)
 	{
+		Serial.println();
+		Serial.print("steptime - ");
+		Serial.println(stepTime);
+		Serial.print("accumulator - ");
+		Serial.println(accumulator);
+		Serial.println(speed);
+		Serial.print("reverse - ");
+		Serial.println(reverse);
 		accumulator = 0;
 		if (reverse)			
 			speed -= stepSize;
@@ -1009,11 +1017,10 @@ void triangle_Timer::Update()
 			speed = (-1 * maxSpeed);
 		else if (speed <= (-1 * maxSpeed))
 			speed = (maxSpeed);
-		if (abs(speed) <= stepSize)
-			reverse = !reverse;
-		Serial.println(reverse);
-		Serial.print("Speed is now ");
-		Serial.println(speed);		
+		//if (abs(speed) <= stepSize)
+		//reverse = !reverse;	
+		if (abs(speed) <= minSpeed)
+			reverse = !reverse;		
 	}
 }
 

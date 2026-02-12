@@ -40,7 +40,8 @@ full_SystemLeds systemLeds;
 system_Timer systemTimer;
 
 sawtooth_Timer sawtooth1(600,25,500);		//time, size, speed
-triangle_Timer triangle1(400, 5, 100);	//time, size, speed
+triangle_Timer triangle1(400, 20, 100);	//time, size, speed
+triangle_Timer triangle2(4000, 15, 200, 100);	//stepTime, stepSize, maxSpeed, minSpeed
 
 
 // Declaring test functions: each one will run the named effect on all relevant devices
@@ -72,8 +73,9 @@ void loop()
 	// system timer calls
 	systemTimer.UpdateSystemTimer();	// have the system timer object find time passed since last main loop execution
 	deltaMillis = systemTimer.GetDeltaMillis();	// deltaMillis is defined in globals for doggos. It is global so that all classes have access to the value for use in timing
-	sawtooth1.Update();
-	triangle1.Update();
+	sawtooth1.Update();	//run the sawtooth timer
+	triangle1.Update();	//run the triangle timers
+	triangle2.Update();
 	// test functions
 	//Serial.println(sawtooth1.timer());
 	// TestFadeThroughColorsFans(600, prideTransgender);
@@ -87,12 +89,12 @@ void loop()
 	//systemLeds.virtualAspectFan[1].SpinColorWave(-150, prideLesbian);
 
 	//systemLeds.virtualAspectFan[2].FadeThroughColors(2000, pinkBreathing);
-	systemLeds.virtualAspectFan[2].SingleLedChase(triangle1.GetSpeed(), prideRainbow,0.5);
+	//systemLeds.virtualAspectFan[2].SingleLedChase(triangle1.GetSpeed(), prideLesbian,0.5);
 
 	systemLeds.virtualDualAspectFans[0].MovingLineDualAspect(100, prideLesbian);
 	//systemLeds.virtualDualAspectFans[0].StackFill(100, prideLesbian);
 
-	systemLeds.virtualCPUFan[0].SingleLedChase(sawtooth1.GetSpeed(),prideRainbow,0.5);
+	systemLeds.virtualCPUFan[0].SingleLedChase(triangle2.GetSpeed(),prideRainbow,0.5);
 
 	//systemLeds.virtualLedStrip[0].ChaseWithFade(60,prideTransgender, .6,2);
 		

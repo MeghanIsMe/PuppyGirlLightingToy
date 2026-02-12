@@ -256,31 +256,11 @@ class system_Timer
 
 	unsigned long pastMillis;
 	unsigned long currentMillis;
-	int deltaMillis;
-	int accumulatorHalfSecond;
-	int counterHalfSecond;
-	int halfSecSawtooth;
-	int halfSecTriangle;
-	int halfSecTriangleZeroCheck;
-	bool halfSecReverse;
-	int accumulatorOneSecond;
-	int counterOneSecond;
-	int oneSecSawtooth;
-	int oneSecTriangle;
-	bool sawToothReverse;	
+	int deltaMillis;	
 	
 	system_Timer()	//constructor function
 	{
 		currentMillis = millis();
-		//for timers with half second base
-		accumulatorHalfSecond = 0;		
-		halfSecReverse = 0;
-		halfSecTriangleZeroCheck = 0;
-		halfSecTriangle = 25; //start at 25 to avoid premature reverse at 0
-		//for timers with 1 second base
-		accumulatorOneSecond = 0;
-		counterOneSecond = 0;			
-		oneSecTriangle = 25;		
 	}
 
 	void UpdateSystemTimer();
@@ -290,7 +270,6 @@ class system_Timer
 //CLASS SAWTOOTH_TIMER
 //Uses parameters passed as arguments to create a speed value used by
 //light effect functions for timing.
-
 class sawtooth_Timer
 {
 	public:
@@ -299,7 +278,7 @@ class sawtooth_Timer
 	int accumulator;	//adding up time until speed change
 	int speed;			//speed for functions running on this timer
 	int stepSize;		//size of change between speed steps
-	int maxSpeed;		//highest speed - triggers inversion
+	int maxSpeed;		//highest (slowest) speed - triggers reverse
 	
 	sawtooth_Timer(int a, int b, int c)		//constructor function
 	{
@@ -323,18 +302,23 @@ class triangle_Timer
 	int accumulator;	//tracking passed milliseconds between steps
 	int stepTime;		//number of milliseconds between steps
 	int stepSize;		//how much speed will change between steps
-	int maxSpeed;		//boundray for speed
+	int maxSpeed;		//upper (slow) boundaray for speed
+	int minSpeed;		//lower (fast) boundary for speed
 	int speed;			//speed for functions running on this timer
 	bool reverse;		//to manage adding vs. subracting speed appropriately
 
-	triangle_Timer(int a, int b, int c) //constructor function
+	triangle_Timer(int a, int b, int c, int d = 0) //constructor function
 
 	{
 		accumulator = 0;
 		stepTime = a;
 		stepSize = b;
 		maxSpeed = c;
-		speed = stepSize * 2;	//if speed starts at stepSize, it bounces around 0
+		minSpeed = d;
+		if (stepSize < minSpeed)
+			speed = minSpeed;
+		else
+			speed = stepSize * 2;	//if speed starts at stepSize, it bounces around 0
 		reverse = false;
 	}
 
