@@ -41,7 +41,7 @@ system_Timer systemTimer;
 // Instantiating effects timers
 sawtooth_Timer sawtooth1(600,10,500);		//time, size, speed
 triangle_Timer triangle1(500, 5, 100);	//time, size, maxSpeed, minSpeed (0)
-triangle_Timer triangle2(3000, 15, 400, 50);	//stepTime, stepSize, maxSpeed, minSpeed
+triangle_Timer triangle2(2000, 15, 400, 50);	//stepTime, stepSize, maxSpeed, minSpeed
 
 
 // Declaring test functions: each one will run the named effect on all relevant devices
