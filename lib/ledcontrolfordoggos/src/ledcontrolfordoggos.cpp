@@ -276,10 +276,10 @@ void generic_LedDevice::FadeThroughColors(int speed, const CRGB* palette)
 	float change; 						// to track amount of blending to apply to colors based on elapsed millis between frames
 	float changePerMilli = 255 / (float)speed; // how much change is applied per millisecond
 	change = changePerMilli * *p_activeTimer;  // how much change/blending to apply this function iteration	
-	if (changePerMilli < 0)  			// convert to positive change in case of negative speed
+	if (changePerMilli < 0)  		// convert to positive change in case of negative speed
 	changePerMilli *= -1;	
 	
-	CheckInitialization();             // check to see if function has been given a start frame at first run 
+	CheckInitialization();			// check to see if function has been given a start frame at first run 
 	if (!CheckTimeForFrameDraw(speed, p_activeTimer)) // manage frame write timing
 		nextFrame = 0;	
 	
@@ -1001,12 +1001,14 @@ void triangle_Timer::Update()
 	{
 		Serial.println();
 		Serial.print("steptime - ");
-		Serial.println(stepTime);
-		Serial.print("accumulator - ");
-		Serial.println(accumulator);
-		Serial.println(speed);
+		Serial.print(stepTime);
+		Serial.print(" | acc - ");
+		Serial.print(accumulator);
+		Serial.print(" | speed - ");
+		Serial.print(speed);
 		Serial.print("reverse - ");
 		Serial.println(reverse);
+		//delay(2000);
 		accumulator = 0;
 		if (reverse)			
 			speed -= stepSize;
@@ -1026,5 +1028,8 @@ void triangle_Timer::Update()
 
 int triangle_Timer::GetSpeed()
 {
-	return speed;
+	if ((speed == 0) && (reverse))
+		return -1;
+	else
+		return speed;
 }

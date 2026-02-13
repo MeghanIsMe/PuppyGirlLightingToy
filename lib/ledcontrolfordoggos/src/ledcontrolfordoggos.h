@@ -132,6 +132,21 @@ class aspect_Fan: public generic_Fan
 	};
 };
 
+class ASUSMR120_fan: public generic_Fan							
+{
+  public:   
+
+  CRGB leds[ASUSMR120LEDS];
+
+  ASUSMR120_fan()								// constructor function
+  {		
+		NUMLEDS = ASUSMR120LEDS;			// number of LEDs on the device
+		initializedFrame = 0;			// whether starting frame is initialized
+		initializedColor = 0;			// whether starting color is initialized
+		p_objectLedArray = leds;		// initialize array pointer to object's LED array							
+	};  
+};
+
 // ░█▀▀░█░░░░░░░█▀▄░█░█░█▀█░█░░░░░█▀▀░█▀▄░█▀█░█▀█░▀█▀░░░█▀█░█▀▀░█▀█░█▀▀░█▀▀░▀█▀░░░█▀▀░█▀█░█▀█
 // ░█░░░█░░░▄▄▄░█░█░█░█░█▀█░█░░░░░█▀▀░█▀▄░█░█░█░█░░█░░░░█▀█░▀▀█░█▀▀░█▀▀░█░░░░█░░░░█▀▀░█▀█░█░█
 // ░▀▀▀░▀▀▀░░░░░▀▀░░▀▀▀░▀░▀░▀▀▀░░░▀░░░▀░▀░▀▀▀░▀░▀░░▀░░░░▀░▀░▀▀▀░▀░░░▀▀▀░▀▀▀░░▀░░░░▀░░░▀░▀░▀░▀
@@ -231,7 +246,8 @@ class full_SystemLeds
 	public:
 	
 	// create two virtual fans for each physical one, allowing blending of effect
-	aspect_Fan virtualAspectFan[NUMASPECTFANS * 2];					
+	aspect_Fan virtualAspectFan[NUMASPECTFANS * 2];	
+	ASUSMR120_fan virtualAsusFan[NUMASUSMR120FANS * 2];
 	cpu_Fan virtualCPUFan[NUMCPUFANS * 2];
 	front_LedStrip virtualLedStrip[NUMLINEARSTRIPS * 2];
 	dual_FrontAspectFans virtualDualAspectFans[2];

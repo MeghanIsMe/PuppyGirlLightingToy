@@ -31,23 +31,25 @@ Add default speeds (and other default values like fade percentage in SpinColorWa
 CRGB stripLeds[LINEARSTRIPLEDS];	// front LED strip is on pin 9
 CRGB aspect0Leds[ASPECTFANLEDS];	// front bottom fan is on pin 2
 CRGB aspect1Leds[ASPECTFANLEDS];	// front top fan is on pin 4
-CRGB aspect2Leds[ASPECTFANLEDS];	// back case fan is on pin 8
+CRGB asusMR120_1Leds[ASUSMR120LEDS];	// back case fan is on pin 8
 CRGB cpuFanLeds[CPUFANLEDS];		// CPU fan is on pin 7
 
 // Instantiating the object that does most of the work of setting LED colors
 full_SystemLeds systemLeds;
 // Instantiating the system timer
 system_Timer systemTimer;
-
-sawtooth_Timer sawtooth1(600,25,500);		//time, size, speed
-triangle_Timer triangle1(400, 20, 100);	//time, size, speed
-triangle_Timer triangle2(4000, 15, 200, 100);	//stepTime, stepSize, maxSpeed, minSpeed
+// Instantiating effects timers
+sawtooth_Timer sawtooth1(600,10,500);		//time, size, speed
+triangle_Timer triangle1(500, 5, 100);	//time, size, maxSpeed, minSpeed (0)
+triangle_Timer triangle2(3000, 15, 400, 50);	//stepTime, stepSize, maxSpeed, minSpeed
 
 
 // Declaring test functions: each one will run the named effect on all relevant devices
-void TestFadeThroughColorsFans(int, const CRGB*);
-void TestSpinColorWave(int, const CRGB*);
-void TestSpinColorWaveFadeFans(int, const CRGB*);  //REMOVE AND REPLACE SINGLELEDCHASE
+//TEST FUNCTIONS FOR ALL DEVICES
+void TestBlinkLeds(int, const CRGB*);
+void TestFadeThroughColors(int, const CRGB*);
+void TestSingleLedChase(int, const CRGB*, float = 0.5);
+//TEST FUNCTIONS FOR FANS ONLY
 void TestSpinLeds(int, CRGB, CRGB = CRGB::Black, CRGB = CRGB::Black);
 void TestSpinOneLed(int speed, const CRGB*);
 void TestMovingLine(int, const CRGB*);
@@ -63,7 +65,7 @@ void setup()
 	// Associating arrays with FastLED. These arrays will be written out to hardware at the end of each main loop
 	FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(aspect0Leds,6);	// aspect0Leds array (bottom front fan) is on pin 2
 	FastLED.addLeds<WS2812B, DATA_PIN4, GRB>(aspect1Leds,6);	// aspect1Leds array (top front fan) is on pin 4
-	FastLED.addLeds<WS2812B, DATA_PIN8, GRB>(aspect2Leds,6);	// aspect2Leds array (back case fan) is on pin 8
+	FastLED.addLeds<WS2812B, DATA_PIN8, GRB>(asusMR120_1Leds,20);	// aspect2Leds array (back case fan) is on pin 8
 	FastLED.addLeds<WS2812B, DATA_PIN7, GRB>(cpuFanLeds,4);		// cpuFanLeds array (CPU fan) is on pin 7
 	FastLED.addLeds<WS2812B, DATA_PIN9, GRB>(stripLeds,20);		// stripLeds array (front LED strip) is on pin 9
  }
@@ -75,31 +77,25 @@ void loop()
 	deltaMillis = systemTimer.GetDeltaMillis();	// deltaMillis is defined in globals for doggos. It is global so that all classes have access to the value for use in timing
 	sawtooth1.Update();	//run the sawtooth timer
 	triangle1.Update();	//run the triangle timers
-	triangle2.Update();
-	// test functions
-	//Serial.println(sawtooth1.timer());
-	// TestFadeThroughColorsFans(600, prideTransgender);
-	// TestSpinColorWave(100, prideTransgender);
-	// TestSpinColorWaveFadeFans(100, prideTransgender);
+	//triangle2.Update();
+
+	//-------- TEST FUNCTIONS
+	//FUNCTIONS FOR ALL DEVICES
+	//TestBlinkLeds(1000, prideRainbow);				//speed, palette
+	//TestFadeThroughColors(5000, prideRainbow);		//speed, palette
+	//TestSpinColorWave(100, prideTransgender);		//speed, palette
+	//TestSingleLedChase(100, pinkBreathing, 0.5);	//speed, palette, fade %
 
 	//RandomTest();
 
 	
-	//systemLeds.virtualAspectFan[0].SpinLeds(100,CRGB::HotPink, CRGB::Aquamarine);
-	//systemLeds.virtualAspectFan[1].SpinColorWave(-150, prideLesbian);
-
-	//systemLeds.virtualAspectFan[2].FadeThroughColors(2000, pinkBreathing);
-	//systemLeds.virtualAspectFan[2].SingleLedChase(triangle1.GetSpeed(), prideLesbian,0.5);
-
-	systemLeds.virtualDualAspectFans[0].MovingLineDualAspect(100, prideLesbian);
-	//systemLeds.virtualDualAspectFans[0].StackFill(100, prideLesbian);
-
-	systemLeds.virtualCPUFan[0].SingleLedChase(triangle2.GetSpeed(),prideRainbow,0.5);
-
-	//systemLeds.virtualLedStrip[0].ChaseWithFade(60,prideTransgender, .6,2);
-		
+	systemLeds.virtualAspectFan[0].SingleLedChase(triangle1.GetSpeed(),prideRainbow,0.5);
+	systemLeds.virtualAspectFan[1].SingleLedChase(triangle2.GetSpeed(),prideRainbow,0.5);
+	systemLeds.virtualAsusFan[0].SingleLedChase(triangle1.GetSpeed(), prideLesbian,0.6);
+	systemLeds.virtualCPUFan[0].SingleLedChase(triangle2.GetSpeed(),prideTransgender,0.5);
 	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(300, prideTransgender, 1,0,1,0);
 	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(-300, prideLesbian, 0,1,0,1);
+	
 	
 	//systemLeds.virtualLedStrip[0].SingleLedChase(30, prideRainbow,0.8);
 	// I feel like it makes the most intuitive sense to make methods of the systemleds object copy arrays out to hardware-associated arrays instead of
@@ -112,9 +108,10 @@ void loop()
 	//systemLeds.virtualAspectFan[1].CopyToExternalArray(aspect1Leds);
 	
 	// Below copies dual aspect fan to front fans
-	systemLeds.virtualDualAspectFans[0].CopyToTwoExternalArrays(aspect1Leds, aspect0Leds);
-	
-	systemLeds.virtualAspectFan[2].CopyToExternalArray(aspect2Leds);
+	//systemLeds.virtualDualAspectFans[0].CopyToTwoExternalArrays(aspect1Leds, aspect0Leds);
+	systemLeds.virtualAspectFan[0].CopyToExternalArray(aspect0Leds);
+	systemLeds.virtualAspectFan[1].CopyToExternalArray(aspect1Leds);
+	systemLeds.virtualAsusFan[0].CopyToExternalArray(asusMR120_1Leds);
 
 	systemLeds.virtualCPUFan[0].CopyToExternalArray(cpuFanLeds);
 
@@ -123,28 +120,31 @@ void loop()
 	FastLED.show();     
 }
 
-void TestFadeThroughColorsFans(int speed, const CRGB* palette)
+void TestBlinkLeds(int speed, const CRGB* palette)
+{
+	systemLeds.virtualAspectFan[0].BlinkLeds(speed, palette);
+	systemLeds.virtualAspectFan[1].BlinkLeds(speed, palette);
+	systemLeds.virtualAspectFan[2].BlinkLeds(speed, palette);
+	systemLeds.virtualCPUFan[0].BlinkLeds(speed, palette);
+	systemLeds.virtualLedStrip[0].BlinkLeds(speed,palette);
+};
+
+void TestFadeThroughColors(int speed, const CRGB* palette)
 {
 	systemLeds.virtualAspectFan[0].FadeThroughColors(speed, palette);
-	systemLeds.virtualAspectFan[1].FadeThroughColors(speed * -1, palette);
+	systemLeds.virtualAspectFan[1].FadeThroughColors(speed, palette);
 	systemLeds.virtualAspectFan[2].FadeThroughColors(speed, palette);
 	systemLeds.virtualCPUFan[0].FadeThroughColors(speed, palette);
+	systemLeds.virtualLedStrip[0].FadeThroughColors(speed,palette);
 };
 
-void TestSingleLedChase(int speed, const CRGB* palette)
+void TestSingleLedChase(int speed, const CRGB* palette, float fade)
 {
-	systemLeds.virtualAspectFan[0].SingleLedChase(speed, palette);
-	systemLeds.virtualAspectFan[1].SingleLedChase(speed * -1, palette);
-	systemLeds.virtualAspectFan[2].SingleLedChase(speed, palette);
-	systemLeds.virtualCPUFan[0].SingleLedChase(speed, palette);
-};
-
-void TestSpinColorWaveFadeFans(int speed, const CRGB* palette)
-{
-	systemLeds.virtualAspectFan[0].SingleLedChase(speed, palette,0.8);
-	systemLeds.virtualAspectFan[1].SingleLedChase(speed * -1, palette,0.8);
-	systemLeds.virtualAspectFan[2].SingleLedChase(speed, palette,0.8);
-	systemLeds.virtualCPUFan[0].SingleLedChase(speed, palette,0.8);
+	systemLeds.virtualAspectFan[0].SingleLedChase(speed, palette, fade);
+	systemLeds.virtualAspectFan[1].SingleLedChase(speed * -1, palette, fade);
+	systemLeds.virtualAspectFan[2].SingleLedChase(speed, palette, fade);
+	systemLeds.virtualCPUFan[0].SingleLedChase(speed, palette, fade);
+	systemLeds.virtualLedStrip[0].SingleLedChase(speed, palette, fade);
 };
 
 void TestSpinLeds(int speed, CRGB color1, CRGB color2, CRGB color3)
