@@ -38,8 +38,8 @@ https://www.asciiart.eu/text-to-ascii-art - pagga from ASCII art archive - mediu
 
 //ASUS MR120 specs
 constexpr int NUMASUSMR120FANS = 1;
-constexpr int ASUSMR120LEDS = 20;
-
+constexpr int ASUSMR120LEDS = 20;	//left LEDs, counter-clockwise: 2-11
+												//right LEDs, clockwise: 12-1
 // Aspect fan specs
 constexpr int NUMASPECTFANS = 2;
 constexpr int ASPECTFANLEDS = 6;
@@ -68,6 +68,7 @@ const CRGB BLACK = CRGB::Black;
 // TEST COLOR ARRAYS/PALETTES
 const CRGB rgbTest[] = {CRGB::Red, CRGB::Lime, CRGB::Blue, CRGB::Black};
 const CRGB redBlueTest[] = {CRGB::Red, CRGB::Blue, CRGB::Black};
+const CRGB blueGapTest[] = {CRGB::Blue, CRGB(1,1,1), CRGB(1,1,1), CRGB(1,1,1), CRGB::Black};
 
 // SINGLE COLOR ARRAYS
 const CRGB blackForRandom[] = {CRGB::Black};
@@ -86,6 +87,7 @@ const CRGB prideTransgenderBreak[] = {CRGB::Turquoise, CRGB::DeepPink, CRGB::Lin
 const CRGB prideLesbian[] = {CRGB(214,46,2),CRGB(184, 60, 8),CRGB(253,152,85),CRGB(125,38,87),CRGB(125,5,82),CRGB::Black};
 const CRGB prideLesbianBreak[] = {CRGB(214,46,2),CRGB(184, 60, 8),CRGB(253,152,85),CRGB(125,38,87),CRGB(125,5,82),CRGB(0,0,1),CRGB(0,0,1),CRGB::Black};
 
+const CRGB prideTransgenderLong[] = {CRGB::Turquoise, CRGB::Turquoise, CRGB::DeepPink,CRGB::DeepPink, CRGB(150,140,130),CRGB(150,140,130), CRGB::DeepPink,CRGB::DeepPink, CRGB::Black};
 						// ░█▀▀░█░░░█▀█░█▀▄░█▀█░█░░░░░█░█░█▀█░█▀▄░▀█▀░█▀█░█▀▄░█░░░█▀▀░█▀▀
 						// ░█░█░█░░░█░█░█▀▄░█▀█░█░░░░░▀▄▀░█▀█░█▀▄░░█░░█▀█░█▀▄░█░░░█▀▀░▀▀█
 						// ░▀▀▀░▀▀▀░▀▀▀░▀▀░░▀░▀░▀▀▀░░░░▀░░▀░▀░▀░▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀▀▀░▀▀▀

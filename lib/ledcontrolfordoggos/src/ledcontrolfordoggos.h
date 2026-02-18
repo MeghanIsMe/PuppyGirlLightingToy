@@ -67,9 +67,10 @@ class generic_LedDevice
 	//effects functions that act on all LEDs synchronously
 	void BlinkLeds(int, const CRGB*);		// blink all of objects's LEDS the same color following palette order
 	void FadeThroughColors(int, const CRGB*); //fade from color to color from a palette
-	void LightLeds(int, CRGB);				// set all of object's LEDs to passed color
+	void LightLeds(CRGB);				// set all of object's LEDs to passed color
 	//effects functions that act on all LEDs asynchronously
 	void SingleLedChase(int, const CRGB*, float = 1.0); //chasing effect with optional fade
+	void ScrollColors_(int, const CRGB*, int, int);
 };
 
 // ░█▀▀░█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░▀█▀░█▀▀░░░█▀▀░█▀█░█▀█
@@ -81,15 +82,9 @@ class generic_Fan : public generic_LedDevice
 	public:	
 		
 	generic_Fan()									// constructor function
-	{}	
-	
-	// utility functions
-		
-	// test functions
-	
+	{}		
 	// effects functions
 	void SpinLeds(int, CRGB, CRGB = BLACK, CRGB = BLACK);	//Spin 1-3 LEDs around a fan
-	void SpinOneLed(int, const CRGB*);				// One LED rotates around fan
 	void MovingLine(int, const CRGB*);				// Line of LEDs bounces back and forth across fan
 };
 
@@ -138,9 +133,9 @@ class ASUSMR120_fan: public generic_Fan
 
   CRGB leds[ASUSMR120LEDS];
 
-  ASUSMR120_fan()								// constructor function
+  ASUSMR120_fan()							// constructor function
   {		
-		NUMLEDS = ASUSMR120LEDS;			// number of LEDs on the device
+		NUMLEDS = ASUSMR120LEDS;		// number of LEDs on the device
 		initializedFrame = 0;			// whether starting frame is initialized
 		initializedColor = 0;			// whether starting color is initialized
 		p_objectLedArray = leds;		// initialize array pointer to object's LED array							

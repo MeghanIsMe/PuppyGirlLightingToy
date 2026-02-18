@@ -304,7 +304,7 @@ directly from the calling object's attributes
 	Parameters:
 NUMLEDS - The number of LEDs to be lit
 color - The color to set the LEDs to */
-void generic_LedDevice::LightLeds(int NUMLEDS, CRGB color)
+void generic_LedDevice::LightLeds(CRGB color)
 {
 	for (int i = 0; i < NUMLEDS; i++)
 		p_objectLedArray[i] = color;
@@ -320,17 +320,90 @@ fade - percentage by which to fade LEDs after each frame (default 1, no fade)
 */
 void generic_LedDevice::SingleLedChase(int speed, const CRGB* palette, float fadeAmount)
 {
-	const int FRAMELIMIT = NUMLEDS;
-	if (!CheckTimeForFrameDraw(speed, p_activeTimer))	// manage frame write timing
+		if (!CheckTimeForFrameDraw(speed, p_activeTimer))	// manage frame write timing
 		return;		
+
+	const int FRAMELIMIT = NUMLEDS;
 		
-	FadeLeds(NUMLEDS,fadeAmount);  					//fade all LEDs by percentage
+	FadeLeds(NUMLEDS,fadeAmount);  				//fade all LEDs to percentage
 
 	p_objectLedArray[*p_activeFrameCounter] = savedColor;	// light LED matching frame number
-			
-	AdvanceColor(palette, FRAMELIMIT, speed);		// manage color progression	
+	
+	AdvanceColor(palette, FRAMELIMIT, speed);	// manage color progression	
 	AdvanceFrame(speed, FRAMELIMIT);				// manage frame advancement
 };
+
+void generic_LedDevice::ScrollColors_(int speed, const CRGB* palette, int start, int end)
+{
+	int lengthOfInputArray = (GetLengthOfBlackTerminatedCRGBArray(palette)); // the number of colors in the passed array
+	int lengthOfBaseArray = lengthOfInputArray * 2;		// the base array holds the input array plus blends	
+	const int FRAMELIMIT = lengthOfBaseArray; 	// how many frames until positions of input array colors repeat
+	float change; 								// to track amount of blending to apply to colors based on elapsed millis between frames
+	float changePerMilli = 255 / (float)speed;	// how much change is applied per millisecond
+	bool nextFrame = 1; 		 				// flag to advance frame at end of function
+	CRGB baseArray[lengthOfBaseArray];  // array to hold basecolors and blended colors
+  	CRGB blendColor;		
+
+	if (!CheckTimeForFrameDraw(speed, p_activeTimer))	// manage frame write - if false, function progresses with between-frame blending
+			nextFrame = 0;								// but will not advance frame	
+			
+	if (changePerMilli < 0)  					// convert to positive change in case of negative speed
+		changePerMilli *= -1;	
+	
+	change = changePerMilli * *p_activeTimer;  	// how much change/blending to apply this function iteration	
+
+	// populating base array
+	int count = 1; 			// stepping through input array while assigning color blends to base array
+	for (int i = 0; i < lengthOfBaseArray; i++) // once for each color + each color blend
+	{		
+		if (i % 2 == 0)		// even lines (and 0) get colors directly from input array
+			baseArray[i] = palette[ (i / 2) % lengthOfInputArray];
+		else if (i % 2 == 1)	// odd lines get blends of colors from input array
+		{	
+			baseArray[i] = blend( 		//calculate half-blend of color on each side
+				 palette[ (i - count) % lengthOfInputArray],			//argument 1
+				 palette[ (i - count + 1) % lengthOfInputArray],	//argument 2
+				 128);															//argument 3
+			count++;			
+		}		
+	}	
+	int x = 16;
+	// Populate outArray with blends of the colors in the base array
+  	// for positive speed
+	CRGB outArray[x];		// Array to hold colors ready to write out to LEDs
+	//# in line above is a placeholder - this will be calculated based on which leds the effect is running on
+	if (speed >= 0)
+		for (int i = 0; i < x /*placeholder*/; i++)  //once for each hardware row
+			{							
+				outArray[i] = blend(
+					(baseArray[ (i + *p_activeFrameCounter) % lengthOfBaseArray ]),		// argument 1
+					(baseArray[ (i + 1 + *p_activeFrameCounter) % lengthOfBaseArray ]),	// argument 2
+					change);															// argument 3																				  			          // argument 3
+			}     
+	// for negative speed
+	else if (speed < 0)  
+		for (int i = 0; i < x/*placeholder*/; i++)
+		{				
+			outArray[i] = blend(										 
+				(baseArray [(*p_activeFrameCounter + i) % lengthOfBaseArray ]),								// argument 1
+				(baseArray [ (*p_activeFrameCounter - 1 + lengthOfBaseArray + i) % lengthOfBaseArray ] ),   // argument 2
+				change);																					// argument 3																								 								 							     // argument 3				
+		}		
+	//populate object's array of LEDs with the colors to be written to the hardware		
+	for (int i = 0; i < x/*placeholder*/; i++)
+		p_objectLedArray[i] = outArray[i];
+	
+	if (nextFrame)
+	{
+    	AdvanceFrame(speed, FRAMELIMIT);  //advance frame as appropriate		
+		Serial.print("FRAMELIMIT - ");
+		Serial.println(FRAMELIMIT);
+		Serial.print("Frame - ");
+		Serial.println(*p_activeFrameCounter);
+		PrintColorArray(outArray,x);
+	}
+	//WriteColorsToOutPutArray(outArray, tl, tr, bl, br, vertRows);	  
+}
 
 
 			// ░█▀▀░█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░▀█▀░█▀▀░░░█▀▀░█▀█░█▀█░░░█▀▀░█░░░█▀█░█▀▀░█▀▀
@@ -392,32 +465,6 @@ void generic_Fan::SpinLeds(int speed, CRGB color1, CRGB color2 , CRGB color3)
 		
 	// housekeeping portion
 	AdvanceFrame(speed, FRAMELIMIT);   // manage frame advancement		
-}
-
-// ░█▀▀░█▀█░▀█▀░█▀█░░░█▀█░█▀█░█▀▀░░░█░░░█▀▀░█▀▄
-// ░▀▀█░█▀▀░░█░░█░█░░░█░█░█░█░█▀▀░░░█░░░█▀▀░█░█
-// ░▀▀▀░▀░░░▀▀▀░▀░▀░░░▀▀▀░▀░▀░▀▀▀░░░▀▀▀░▀▀▀░▀▀░
-// make one led "spin" around the fan by lighting them sequentially
-// This supports color cycling through paelettes, whereas SpinLeds does not
-//		Parameters:
-// speed - time in milliseconds between frame
-// palette - color palette used for effect
-void generic_Fan::SpinOneLed(int speed, const CRGB* palette)  
-{
-	//  housekeeping portion
-	const int FRAMELIMIT = NUMLEDS;    // number of frames in this effect
-	
-	CheckInitialization();             // check to see if function has been given a start frame at first run and give one if necessary
-	if (!CheckTimeForFrameDraw(speed, p_activeTimer)) // manage frame write timing
-		return;		
-		
-	// actual effects portion
-	BlankLeds(NUMLEDS);                        // write black to all leds before writing frame data
-	p_objectLedArray[frameNumber] = savedColor;    // write color to led with same number as frame number    
-	
-	// housekeeping portion
-	AdvanceColor(palette, FRAMELIMIT, speed);
-	AdvanceFrame(speed, FRAMELIMIT);   // manage frame advancement
 }
 
 // ░█▄█░█▀█░█░█░▀█▀░█▀█░█▀▀░░░█░░░▀█▀░█▀█░█▀▀
@@ -701,7 +748,7 @@ void front_LedStrip::DetermineTimer(bool tl, bool tr, bool bl, bool br)
 // palette - color palette used for effect
 // fadeAmount - factor by which to multiply each LED at frameAdvance
 // lights * 1 * - the number of LEDs to use in the chasing effect
-//TO DO can now rewrite this to call SpinWaveFade if there is only one light
+//TO DO can now rewrite this to call SingleLedChase if there is only one light
 void front_LedStrip::ChaseWithFade(int speed, const CRGB* palette, float fadeAmount, int lights /* 1 */)
 {
 	const int FRAMELIMIT = NUMLEDS;
@@ -741,13 +788,13 @@ void front_LedStrip::ScrollColors(int speed, const CRGB* palette, int vertRows, 
 {
 	int lengthOfInputArray = (GetLengthOfBlackTerminatedCRGBArray(palette)); // the number of colors in the passed array
 	int lengthOfBaseArray = lengthOfInputArray * 2;		// the base array holds the input array plus blends	
-	int count = 1; 								// math for assigning blended colors to baseArray
+	int count = 1; 							// math for assigning blended colors to baseArray
 	const int FRAMELIMIT = lengthOfBaseArray; 	// how many frames until positions of input array colors repeat
 	float change; 								// to track amount of blending to apply to colors based on elapsed millis between frames
 	float changePerMilli = 255 / (float)speed;	// how much change is applied per millisecond
 	bool nextFrame = 1; 		 				// flag to advance frame at end of function
-	CRGB baseArray[lengthOfBaseArray];  		// array to hold basecolors and blended colors
-  	CRGB outArray[vertRows];					// Array to hold colors ready to write out to LEDs
+	CRGB baseArray[lengthOfBaseArray];  // array to hold basecolors and blended colors
+  	CRGB outArray[vertRows];				// Array to hold colors ready to write out to LEDs
 	CRGB blendColor;							// to temporarily hold color to write to outarray	
 	
 	DetermineTimer(tl, tr, bl, br);  			// determine which of the object's frame counters and timers to run the effect on		
@@ -998,30 +1045,18 @@ void triangle_Timer::Update()
 {
 	accumulator += deltaMillis;	
 	if (accumulator >= stepTime)
-	{
-		Serial.println();
-		Serial.print("steptime - ");
-		Serial.print(stepTime);
-		Serial.print(" | acc - ");
-		Serial.print(accumulator);
-		Serial.print(" | speed - ");
-		Serial.print(speed);
-		Serial.print("reverse - ");
-		Serial.println(reverse);
-		//delay(2000);
-		accumulator = 0;
-		if (reverse)			
+	{	
+		accumulator = 0;			//reset timer
+		if (reverse)				//add or subtract speed as appropriate
 			speed -= stepSize;
 		else
 			speed += stepSize;
 
-		if (speed >= maxSpeed)
+		if (speed >= maxSpeed)					//reverses at slowest point with postive speed
 			speed = (-1 * maxSpeed);
-		else if (speed <= (-1 * maxSpeed))
-			speed = (maxSpeed);
-		//if (abs(speed) <= stepSize)
-		//reverse = !reverse;	
-		if (abs(speed) <= minSpeed)
+		else if (speed <= (-1 * maxSpeed))	//reverses at slowest point with negative speed
+			speed = (maxSpeed);		
+		if (abs(speed) <= minSpeed)			//reverses at fastest point w positive or negative speed
 			reverse = !reverse;		
 	}
 }
@@ -1029,7 +1064,7 @@ void triangle_Timer::Update()
 int triangle_Timer::GetSpeed()
 {
 	if ((speed == 0) && (reverse))
-		return -1;
+		return -1; //prevents running in the wrong direction at min speed
 	else
 		return speed;
 }
