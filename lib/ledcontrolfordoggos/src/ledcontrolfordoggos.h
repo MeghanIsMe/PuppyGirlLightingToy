@@ -139,6 +139,8 @@ class ASUSMR120_fan: public generic_Fan
 		initializedFrame = 0;			// whether starting frame is initialized
 		initializedColor = 0;			// whether starting color is initialized
 		p_objectLedArray = leds;		// initialize array pointer to object's LED array							
+		for (int i = 0; i < NUMLEDS; i++)	//set all LEDs to black
+			leds[i] = CRGB::Black;
 	};  
 };
 
@@ -253,6 +255,7 @@ class full_SystemLeds
 
 	void CopyFanToExternalArray(int, CRGB*);
 	void CopyAspectFanToExternalArray(int, CRGB*);
+	void MergeDeviceLeds(ASUSMR120_fan,ASUSMR120_fan);
 	//void TranslateCombinedAspectsToIndividualFans(int,int);  //translates a populated combined2AspectFans array into 2 separate 1-dimension elements of aspectFansLeds
 
 };

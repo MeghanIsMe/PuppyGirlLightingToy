@@ -91,9 +91,11 @@ void loop()
 	systemLeds.virtualAspectFan[0].SingleLedChase(triangle1.GetSpeed(),prideRainbow,0.5);
 	systemLeds.virtualAspectFan[1].SingleLedChase(triangle2.GetSpeed(),prideRainbow,0.5);
 	//systemLeds.virtualAsusFan[0].FadeThroughColors(1200, prideTransgender);
-	systemLeds.virtualAsusFan[0].ScrollColors_(1000, prideTransgenderLong, 0, 9);
+	systemLeds.virtualAsusFan[0].ScrollColors_(500, prideTransgenderLong, 3, 9);
+	systemLeds.virtualAsusFan[1].ScrollColors_(-500, prideTransgenderLong, 13, 9);
 	//systemLeds.virtualAsusFan[0].SpinLeds(triangle1.GetSpeed(), NICEBLUE, CRGB::Red);
-	systemLeds.virtualCPUFan[0].FadeThroughColors(4000,prideRainbow);
+	//systemLeds.virtualAsusFan[0].SingleLedChase(800,prideTransgender, 0);
+	//systemLeds.virtualCPUFan[0].FadeThroughColors(4000,prideRainbow);
 	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(300, prideTransgender, 1,0,1,0);
 	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(-300, prideLesbian, 0,1,0,1);
 	
@@ -112,7 +114,10 @@ void loop()
 	//systemLeds.virtualDualAspectFans[0].CopyToTwoExternalArrays(aspect1Leds, aspect0Leds);
 	systemLeds.virtualAspectFan[0].CopyToExternalArray(aspect0Leds);
 	systemLeds.virtualAspectFan[1].CopyToExternalArray(aspect1Leds);
+	systemLeds.MergeDeviceLeds(systemLeds.virtualAsusFan[0],systemLeds.virtualAsusFan[1]);
 	systemLeds.virtualAsusFan[0].CopyToExternalArray(asusMR120_1Leds);
+	//systemLeds.virtualAsusFan[1].CopyToExternalArray(asusMR120_1Leds);
+	//PrintColorArray(asusMR120_1Leds,20);
 
 	systemLeds.virtualCPUFan[0].CopyToExternalArray(cpuFanLeds);
 

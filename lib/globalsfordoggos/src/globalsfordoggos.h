@@ -87,7 +87,7 @@ const CRGB prideTransgenderBreak[] = {CRGB::Turquoise, CRGB::DeepPink, CRGB::Lin
 const CRGB prideLesbian[] = {CRGB(214,46,2),CRGB(184, 60, 8),CRGB(253,152,85),CRGB(125,38,87),CRGB(125,5,82),CRGB::Black};
 const CRGB prideLesbianBreak[] = {CRGB(214,46,2),CRGB(184, 60, 8),CRGB(253,152,85),CRGB(125,38,87),CRGB(125,5,82),CRGB(0,0,1),CRGB(0,0,1),CRGB::Black};
 
-const CRGB prideTransgenderLong[] = {CRGB::Turquoise, CRGB::Turquoise, CRGB::DeepPink,CRGB::DeepPink, CRGB(150,140,130),CRGB(150,140,130), CRGB::DeepPink,CRGB::DeepPink, CRGB::Black};
+const CRGB prideTransgenderLong[] = {CRGB(64,224,250), CRGB(64,224,250), CRGB::DeepPink,CRGB::DeepPink, CRGB(150,140,130),CRGB(150,140,130), CRGB::DeepPink,CRGB::DeepPink, CRGB::Black};
 						// ░█▀▀░█░░░█▀█░█▀▄░█▀█░█░░░░░█░█░█▀█░█▀▄░▀█▀░█▀█░█▀▄░█░░░█▀▀░█▀▀
 						// ░█░█░█░░░█░█░█▀▄░█▀█░█░░░░░▀▄▀░█▀█░█▀▄░░█░░█▀█░█▀▄░█░░░█▀▀░▀▀█
 						// ░▀▀▀░▀▀▀░▀▀▀░▀▀░░▀░▀░▀▀▀░░░░▀░░▀░▀░▀░▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀▀▀░▀▀▀

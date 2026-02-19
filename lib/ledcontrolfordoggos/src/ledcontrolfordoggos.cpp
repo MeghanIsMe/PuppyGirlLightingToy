@@ -333,7 +333,7 @@ void generic_LedDevice::SingleLedChase(int speed, const CRGB* palette, float fad
 	AdvanceFrame(speed, FRAMELIMIT);				// manage frame advancement
 };
 
-void generic_LedDevice::ScrollColors_(int speed, const CRGB* palette, int start, int end)
+void generic_LedDevice::ScrollColors_(int speed, const CRGB* palette, int start, int length)
 {
 	int lengthOfInputArray = (GetLengthOfBlackTerminatedCRGBArray(palette)); // the number of colors in the passed array
 	int lengthOfBaseArray = lengthOfInputArray * 2;		// the base array holds the input array plus blends	
@@ -342,14 +342,11 @@ void generic_LedDevice::ScrollColors_(int speed, const CRGB* palette, int start,
 	float changePerMilli = 255 / (float)speed;	// how much change is applied per millisecond
 	bool nextFrame = 1; 		 				// flag to advance frame at end of function
 	CRGB baseArray[lengthOfBaseArray];  // array to hold basecolors and blended colors
-  	CRGB blendColor;		
 
 	if (!CheckTimeForFrameDraw(speed, p_activeTimer))	// manage frame write - if false, function progresses with between-frame blending
 			nextFrame = 0;								// but will not advance frame	
-			
 	if (changePerMilli < 0)  					// convert to positive change in case of negative speed
-		changePerMilli *= -1;	
-	
+		changePerMilli *= -1;		
 	change = changePerMilli * *p_activeTimer;  	// how much change/blending to apply this function iteration	
 
 	// populating base array
@@ -366,14 +363,19 @@ void generic_LedDevice::ScrollColors_(int speed, const CRGB* palette, int start,
 				 128);															//argument 3
 			count++;			
 		}		
-	}	
-	int x = 16;
+	}
+		//baseArray is now populated with colors to be assigned to the outArray
+		//This will be the same in each function call with even numbers having
+		//colors from the input array and odd numbers having 50/50 blends of the
+		//colors on each side
+
+	int y = (length - start);	//This is how many LEDs will be in the effect
+	CRGB outArray[length];		// Array to hold colors ready to write out to LEDs
+	//# in line above is a placeholder - this will be calculated based on which leds the effect is running on
 	// Populate outArray with blends of the colors in the base array
   	// for positive speed
-	CRGB outArray[x];		// Array to hold colors ready to write out to LEDs
-	//# in line above is a placeholder - this will be calculated based on which leds the effect is running on
 	if (speed >= 0)
-		for (int i = 0; i < x /*placeholder*/; i++)  //once for each hardware row
+		for (int i = 0; i < length; i++)  //once for each LED
 			{							
 				outArray[i] = blend(
 					(baseArray[ (i + *p_activeFrameCounter) % lengthOfBaseArray ]),		// argument 1
@@ -382,25 +384,31 @@ void generic_LedDevice::ScrollColors_(int speed, const CRGB* palette, int start,
 			}     
 	// for negative speed
 	else if (speed < 0)  
-		for (int i = 0; i < x/*placeholder*/; i++)
+		for (int i = 0; i < length; i++)
 		{				
 			outArray[i] = blend(										 
 				(baseArray [(*p_activeFrameCounter + i) % lengthOfBaseArray ]),								// argument 1
 				(baseArray [ (*p_activeFrameCounter - 1 + lengthOfBaseArray + i) % lengthOfBaseArray ] ),   // argument 2
 				change);																					// argument 3																								 								 							     // argument 3				
 		}		
+	//outArray, which is the length of the number of LEDs in the effect
+	//is now populated with colors ready to be written to the appropriate
+	//elements of the object's array of LEDs
+
 	//populate object's array of LEDs with the colors to be written to the hardware		
-	for (int i = 0; i < x/*placeholder*/; i++)
-		p_objectLedArray[i] = outArray[i];
+	for (int i = 0; i < length/*placeholder*/; i++)
+		p_objectLedArray[(i + start) % NUMLEDS] = outArray[i];
 	
 	if (nextFrame)
 	{
-    	AdvanceFrame(speed, FRAMELIMIT);  //advance frame as appropriate		
+    	AdvanceFrame(speed, FRAMELIMIT);  //advance frame as appropriate	
+		/*Serial.print("Y - ");
+		Serial.println(y);
 		Serial.print("FRAMELIMIT - ");
 		Serial.println(FRAMELIMIT);
 		Serial.print("Frame - ");
 		Serial.println(*p_activeFrameCounter);
-		PrintColorArray(outArray,x);
+		PrintColorArray(p_objectLedArray,20);*/
 	}
 	//WriteColorsToOutPutArray(outArray, tl, tr, bl, br, vertRows);	  
 }
@@ -795,7 +803,6 @@ void front_LedStrip::ScrollColors(int speed, const CRGB* palette, int vertRows, 
 	bool nextFrame = 1; 		 				// flag to advance frame at end of function
 	CRGB baseArray[lengthOfBaseArray];  // array to hold basecolors and blended colors
   	CRGB outArray[vertRows];				// Array to hold colors ready to write out to LEDs
-	CRGB blendColor;							// to temporarily hold color to write to outarray	
 	
 	DetermineTimer(tl, tr, bl, br);  			// determine which of the object's frame counters and timers to run the effect on		
 												// this sets the pointers p_activeFrameCounter and p_activeTimer
@@ -963,6 +970,15 @@ void full_SystemLeds::CopyFanToExternalArray(int fanNumber, CRGB* extArray)
 	for (int i = 0; i < ASPECTFANLEDS; i++)
 	{		
 		extArray[i] = virtualAspectFan[fanNumber].leds[i];	
+	}
+}
+
+void full_SystemLeds::MergeDeviceLeds(ASUSMR120_fan fan1,ASUSMR120_fan fan2)
+{
+	for (int i = 0; i < fan1.NUMLEDS; i ++)
+	{
+		if (fan2.p_objectLedArray[i] != CRGB::Black)
+			fan1.p_objectLedArray[i] = fan2.p_objectLedArray[i];
 	}
 }
 
