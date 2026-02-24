@@ -243,7 +243,7 @@ class full_SystemLeds
 	public:
 	
 	// create two virtual fans for each physical one, allowing blending of effect
-	aspect_Fan virtualAspectFan[NUMASPECTFANS * 2];	
+	//aspect_Fan virtualAspectFan[NUMASPECTFANS * 2];	
 	ASUSMR120_fan virtualAsusFan[NUMASUSMR120FANS * 2];
 	cpu_Fan virtualCPUFan[NUMCPUFANS * 2];
 	front_LedStrip virtualLedStrip[NUMLINEARSTRIPS * 2];
@@ -256,6 +256,7 @@ class full_SystemLeds
 	void CopyFanToExternalArray(int, CRGB*);
 	void CopyAspectFanToExternalArray(int, CRGB*);
 	void MergeDeviceLeds(ASUSMR120_fan,ASUSMR120_fan);
+
 	//void TranslateCombinedAspectsToIndividualFans(int,int);  //translates a populated combined2AspectFans array into 2 separate 1-dimension elements of aspectFansLeds
 
 };

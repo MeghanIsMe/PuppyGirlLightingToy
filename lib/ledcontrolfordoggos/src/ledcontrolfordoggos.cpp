@@ -959,7 +959,7 @@ void full_SystemLeds::CopyAspectFanToExternalArray(int fanNumber, CRGB* extArray
 {
 	for (int i = 0; i < ASPECTFANLEDS; i++)
 	{		
-		extArray[i] = virtualAspectFan[fanNumber].leds[i];
+		//extArray[i] = virtualAspectFan[fanNumber].leds[i];
 		//Serial.println("CFTEA");
 		//SerialPrintColor(extArray[0]);
 	}
@@ -969,7 +969,7 @@ void full_SystemLeds::CopyFanToExternalArray(int fanNumber, CRGB* extArray)
 {
 	for (int i = 0; i < ASPECTFANLEDS; i++)
 	{		
-		extArray[i] = virtualAspectFan[fanNumber].leds[i];	
+		//extArray[i] = virtualAspectFan[fanNumber].leds[i];	
 	}
 }
 
