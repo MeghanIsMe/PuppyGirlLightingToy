@@ -37,11 +37,11 @@ https://www.asciiart.eu/text-to-ascii-art - pagga from ASCII art archive - mediu
 // See also - https://stackoverflow.com/questions/38890349/constexpr-vs-extern-const-which-has-priority#:~:text=Using%20extern%20const%20in%20the,or%20as%20an%20array%20size.
 
 //ASUS MR120 specs
-constexpr int NUMASUSMR120FANS = 3;
+constexpr int NUMASUSMR120FANS = 1;
 constexpr int ASUSMR120LEDS = 20;	//left LEDs, counter-clockwise: 2-11
 												//right LEDs, clockwise: 12-1
 // Aspect fan specs
-constexpr int NUMASPECTFANS = 0;
+constexpr int NUMASPECTFANS = 2;
 constexpr int ASPECTFANLEDS = 6;
 // CPU fan specs
 constexpr int NUMCPUFANS = 1;
