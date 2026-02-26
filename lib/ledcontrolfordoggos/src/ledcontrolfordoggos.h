@@ -252,6 +252,7 @@ class full_SystemLeds
 	void CopyFanToExternalArray(int, CRGB*);				
 	void CopyAspectFanToExternalArray(int, CRGB*);		
 	void MergeDeviceLeds(ASUSMR120_fan,ASUSMR120_fan);	//Copies non-black LEDs from source to destination
+	void MergeDeviceLeds(front_LedStrip, front_LedStrip);	//Copies non-black LEDs from source to destination
 	//void TranslateCombinedAspectsToIndividualFans(int,int);  //translates a populated combined2AspectFans array into 2 separate 1-dimension elements of aspectFansLeds
 
 };
