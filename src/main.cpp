@@ -29,9 +29,9 @@ Add default speeds (and other default values like fade percentage in SpinColorWa
 // These are the arrays that are written to hardware by FastLED.show at the end of each main loop
 // They have a 1-1 correspondence to the aRGB LED hardware
 CRGB stripLeds[LINEARSTRIPLEDS];	// front LED strip is on pin 9
-CRGB aspect0Leds[ASPECTFANLEDS];	// front bottom fan is on pin 2
-CRGB aspect1Leds[ASPECTFANLEDS];	// front top fan is on pin 4
-CRGB asusMR120_1Leds[ASUSMR120LEDS];	// back case fan is on pin 8
+CRGB asusMR120_0Leds[ASUSMR120LEDS];	// front bottom fan is on pin 2
+CRGB asusMR120_1Leds[ASUSMR120LEDS];	// front top fan is on pin 4
+CRGB asusMR120_2Leds[ASUSMR120LEDS];	// back case fan is on pin 8
 CRGB cpuFanLeds[CPUFANLEDS];		// CPU fan is on pin 7
 
 // Instantiating the object that does most of the work of setting LED colors
@@ -62,9 +62,9 @@ void setup()
 	Serial.begin(9600);	// for serial debugging
 
 	// Associating arrays with FastLED. These arrays will be written out to hardware at the end of each main loop
-	FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(aspect0Leds,6);		// aspect0Leds array (bottom front fan) is on pin 2
-	FastLED.addLeds<WS2812B, DATA_PIN4, GRB>(aspect1Leds,6);		// aspect1Leds array (top front fan) is on pin 4
-	FastLED.addLeds<WS2812B, DATA_PIN8, GRB>(asusMR120_1Leds,20);	// ASUS fan array (back case fan) is on pin 8
+	FastLED.addLeds<WS2812B, DATA_PIN2, GRB>(asusMR120_0Leds,20);		// aspect0Leds array (bottom front fan) is on pin 2
+	FastLED.addLeds<WS2812B, DATA_PIN4, GRB>(asusMR120_1Leds,20);		// aspect1Leds array (top front fan) is on pin 4
+	FastLED.addLeds<WS2812B, DATA_PIN8, GRB>(asusMR120_2Leds,20);	// ASUS fan array (back case fan) is on pin 8
 	FastLED.addLeds<WS2812B, DATA_PIN7, GRB>(cpuFanLeds,4);		// cpuFanLeds array (CPU fan) is on pin 7
 	FastLED.addLeds<WS2812B, DATA_PIN9, GRB>(stripLeds,20);		// stripLeds array (front LED strip) is on pin 9
  }
@@ -86,18 +86,24 @@ void loop()
 	//TestSingleLedChase(100, pinkBreathing, 0.5);	//speed, palette, fade %
 
 	//RandomTest();
-
 	
-	systemLeds.virtualAspectFan[0].SingleLedChase(triangle1.GetSpeed(),prideRainbow,0.5);
-	systemLeds.virtualAspectFan[1].SingleLedChase(triangle2.GetSpeed(),prideRainbow,0.5);
-	//systemLeds.virtualAsusFan[0].FadeThroughColors(1200, prideTransgender);
-	systemLeds.virtualAsusFan[0].ScrollColors_(500, prideTransgenderLong, 3, 9);
-	systemLeds.virtualAsusFan[1].ScrollColors_(-500, prideTransgenderLong, 13, 9);
 	//systemLeds.virtualAsusFan[0].SpinLeds(triangle1.GetSpeed(), NICEBLUE, CRGB::Red);
 	//systemLeds.virtualAsusFan[0].SingleLedChase(800,prideTransgender, 0);
+	//systemLeds.virtualAsusFan[0].FadeThroughColors(1200, prideTransgender);
+	systemLeds.virtualAsusFan[0].SingleLedChase(triangle1.GetSpeed(),prideRainbow,0.5);
+	
+	systemLeds.virtualAsusFan[1].SingleLedChase(triangle2.GetSpeed(),prideLesbian,0.5);
+	
+	systemLeds.virtualAsusFan[2].ScrollColors_(500, prideTransgenderLong, 3, 9);
+	
+	systemLeds.virtualAsusFan[3].ScrollColors_(-500, prideTransgenderLong, 13, 9);
+	
 	//systemLeds.virtualCPUFan[0].FadeThroughColors(4000,prideRainbow);
-	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(300, prideTransgender, 1,0,1,0);
-	systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(-300, prideLesbian, 0,1,0,1);
+	
+	systemLeds.virtualLedStrip[0].ScrollColors_(-500, prideLesbian, 0, 10);
+	//systemLeds.virtualLedStrip[0].ScrollColors_(-500, prideLesbian,10, 10);
+	//systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(300, prideTransgender, 1,0,1,0);
+	//systemLeds.virtualLedStrip[0].ScrollColorsOnFrontStrips(-300, prideLesbian, 0,1,0,1);
 	
 	
 	//systemLeds.virtualLedStrip[0].SingleLedChase(30, prideRainbow,0.8);
@@ -112,10 +118,10 @@ void loop()
 	
 	// Below copies dual aspect fan to front fans
 	//systemLeds.virtualDualAspectFans[0].CopyToTwoExternalArrays(aspect1Leds, aspect0Leds);
-	systemLeds.virtualAspectFan[0].CopyToExternalArray(aspect0Leds);
-	systemLeds.virtualAspectFan[1].CopyToExternalArray(aspect1Leds);
-	systemLeds.MergeDeviceLeds(systemLeds.virtualAsusFan[0],systemLeds.virtualAsusFan[1]);
-	systemLeds.virtualAsusFan[0].CopyToExternalArray(asusMR120_1Leds);
+	systemLeds.virtualAsusFan[0].CopyToExternalArray(asusMR120_0Leds);
+	systemLeds.virtualAsusFan[1].CopyToExternalArray(asusMR120_1Leds);
+	systemLeds.MergeDeviceLeds(systemLeds.virtualAsusFan[2],systemLeds.virtualAsusFan[3]);
+	systemLeds.virtualAsusFan[2].CopyToExternalArray(asusMR120_2Leds);
 	//systemLeds.virtualAsusFan[1].CopyToExternalArray(asusMR120_1Leds);
 	//PrintColorArray(asusMR120_1Leds,20);
 

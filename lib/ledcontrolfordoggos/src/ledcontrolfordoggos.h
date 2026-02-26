@@ -58,7 +58,7 @@ class generic_LedDevice
 	//mangement functions
 	void CheckInitialization();				// Check whether to initialize frame number
 	bool CheckTimeForFrameDraw(int, int*);	// Check whether enough time has passed to update effect
-	void CopyToExternalArray(CRGB*);
+	void CopyToExternalArray(CRGB*);			//Copies object's LED array to one passed as parameter
 	void AdvanceColor(const CRGB*, int, int);	// acts on savedColor and paletteColorIndex to progress color
 	void AdvanceFrame(int, int); 			// acts on p_activeFrameCounter to progress frame number	
 	//effects sub-functions
@@ -222,16 +222,12 @@ class front_LedStrip : public generic_LedStrip
 		initializedColor = 0;
 		p_objectLedArray = leds;		// initialize array pointer to object's LED array		
 	}
-	//utility functions
-	void WriteToOutgoingArray(int, CRGB*);
+	//utility functions	
 	void DetermineTimer(bool, bool, bool, bool);
 	
 	//effects functions
 	
-	void ChaseWithFade(int, const CRGB*, float, int = 1); // chasing affect with fading tail
-	void ScrollColors(int, const CRGB*, int, bool, bool, bool, bool);
-	void ScrollColorsOnFrontStrips(int, const CRGB*, bool, bool, bool, bool);
-	void WriteColorsToOutPutArray(CRGB*, bool, bool, bool, bool, int);
+	void ChaseWithFade(int, const CRGB*, float, int = 1); // chasing affect with fading tail	
 };
 
 // ░█▀▀░█░░░░░░░█▀▀░█░█░█░░░█░░░░░█▀▀░█░█░█▀▀░▀█▀░█▀▀░█▄█░░░█░░░█▀▀░█▀▄░█▀▀
@@ -253,9 +249,9 @@ class full_SystemLeds
 	full_SystemLeds()		// constructor function																			// constructor function
 	{ }
 
-	void CopyFanToExternalArray(int, CRGB*);
-	void CopyAspectFanToExternalArray(int, CRGB*);
-	void MergeDeviceLeds(ASUSMR120_fan,ASUSMR120_fan);
+	void CopyFanToExternalArray(int, CRGB*);				
+	void CopyAspectFanToExternalArray(int, CRGB*);		
+	void MergeDeviceLeds(ASUSMR120_fan,ASUSMR120_fan);	//Copies non-black LEDs from source to destination
 	//void TranslateCombinedAspectsToIndividualFans(int,int);  //translates a populated combined2AspectFans array into 2 separate 1-dimension elements of aspectFansLeds
 
 };
